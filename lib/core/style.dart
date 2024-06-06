@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter-ceticy/core/theme.dart';
+import 'package:ceticy/core/theme.dart';
 
 const appBar = TextStyle(
   color: ThemeColor.primary,
