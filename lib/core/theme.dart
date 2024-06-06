@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 class AppColor {
   AppColor._();
 
-  static const Color primary50 = const Color(0xFFFAF5FF);
-  static const Color primary100 = const Color(0xFFF3E8FF);
-  static const Color primary200 = const Color(0xFFEAD4FF);
-  static const Color primary300 = const Color(0xFFD9B3FF);
-  static const Color primary400 = const Color(0xFFC282FE);
-  static const Color primary500 = const Color(0xFFAB53F9);
-  static const Color primary600 = const Color(0xFF9731EC);
-  static const Color primary700 = const Color(0xFF8120D0);
-  static const Color primary800 = const Color(0xFF6E1FAA);
-  static const Color primary900 = const Color(0xFF5A1B88);
-  static const Color primary950 = const Color(0xFF3D0665);
+  static const Color primary50 = Color(0xFFFAF5FF);
+  static const Color primary100 = Color(0xFFF3E8FF);
+  static const Color primary200 = Color(0xFFEAD4FF);
+  static const Color primary300 = Color(0xFFD9B3FF);
+  static const Color primary400 = Color(0xFFC282FE);
+  static const Color primary500 = Color(0xFFAB53F9);
+  static const Color primary600 = Color(0xFF9731EC);
+  static const Color primary700 = Color(0xFF8120D0);
+  static const Color primary800 = Color(0xFF6E1FAA);
+  static const Color primary900 = Color(0xFF5A1B88);
+  static const Color primary950 = Color(0xFF3D0665);
 }
 
 class AppTheme {
@@ -28,7 +28,7 @@ class AppTheme {
       ),
     ),
 
-    colorScheme: ColorScheme(
+    colorScheme: const ColorScheme(
       primary: AppColor.primary400,
       secondary: AppColor.primary600,
       surface: Colors.white,
