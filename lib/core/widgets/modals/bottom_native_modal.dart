@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class BottomNativeModal extends StatelessWidget {
   final Widget content;
   const BottomNativeModal({
-    Key? key,
+    super.key,
     required this.content,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

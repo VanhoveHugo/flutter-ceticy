@@ -3,7 +3,7 @@ import 'package:ceticy/views/user/widgets/action_buttons.dart';
 import 'package:ceticy/views/user/widgets/swipe_screen.dart';
 
 class DiscoverPage extends StatefulWidget {
-  const DiscoverPage({Key? key}) : super(key: key);
+  const DiscoverPage({super.key});
 
   @override
   State<DiscoverPage> createState() => _DiscoverPageState();

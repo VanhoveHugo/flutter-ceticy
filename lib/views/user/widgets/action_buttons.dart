@@ -8,11 +8,11 @@ class ActionButtons extends StatelessWidget {
   final VoidCallback onLikePressed;
 
   const ActionButtons({
+    super.key,
     required this.onClosePressed,
     required this.onInfoPressed,
     required this.onLikePressed,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,10 @@ class ActionButtons extends StatelessWidget {
               AppAsset.getSvg("heart"),
               width: 30,
               height: 30,
-              color: Theme.of(context).colorScheme.onPrimary,
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).colorScheme.onPrimary,
+                BlendMode.srcIn,
+              ),
             ),
             backgroundColor: Theme.of(context).colorScheme.primary,
             onPressed: onLikePressed,
@@ -69,7 +72,7 @@ class ActionButtons extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       child: InkWell(
-        splashColor: Colors.white.withOpacity(0.1),
+        splashColor: Color.fromRGBO(255, 255, 255, 0.1),
         onTap: onPressed,
         borderRadius:
             BorderRadius.circular(16),

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:ceticy/providers/auth_provider.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({super.key});
 
   @override
   RegisterPageState createState() => RegisterPageState();

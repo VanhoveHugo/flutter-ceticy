@@ -14,7 +14,7 @@ class PollsDetailsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(poll.name),
-       actions: [
+        actions: [
           PopupMenuButton<int>(
             icon: const Icon(Icons.more_vert),
             offset: const Offset(0, 50),
@@ -34,6 +34,9 @@ class PollsDetailsPage extends StatelessWidget {
                 ),
                 onTap: () {
                   Future.delayed(Duration.zero, () {
+                    if (!context.mounted) {
+                      return;
+                    }
                     // Pour éviter un bug avec le menu qui se ferme
                     showDialog(
                       context: context,
@@ -68,7 +71,6 @@ class PollsDetailsPage extends StatelessWidget {
             ],
           ),
         ],
-
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -87,7 +89,10 @@ class PollsDetailsPage extends StatelessWidget {
                   'assets/icons/Time-Circle.svg',
                   width: 20,
                   height: 20,
-                  color: Theme.of(context).colorScheme.primary,
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).colorScheme.primary,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 const SizedBox(width: 5),
                 Text(
@@ -106,7 +111,10 @@ class PollsDetailsPage extends StatelessWidget {
                   'assets/icons/Card.svg',
                   width: 24,
                   height: 24,
-                  color: Theme.of(context).colorScheme.primary,
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).colorScheme.primary,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 const SizedBox(width: 5),
                 Text(

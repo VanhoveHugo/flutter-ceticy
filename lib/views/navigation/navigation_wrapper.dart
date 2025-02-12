@@ -5,7 +5,7 @@ import 'package:ceticy/views/navigation/manager_navigation.dart';
 import 'package:ceticy/providers/auth_provider.dart';
 
 class NavigationWrapper extends StatelessWidget {
-  const NavigationWrapper({Key? key}) : super(key: key);
+  const NavigationWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {

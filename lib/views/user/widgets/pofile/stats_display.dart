@@ -5,10 +5,10 @@ class StatsDisplay extends StatelessWidget {
   final String subtitle;
 
   const StatsDisplay({
-    Key? key,
+    super.key,
     required this.mainText,
     required this.subtitle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

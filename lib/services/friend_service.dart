@@ -22,8 +22,6 @@ class FriendService {
         );
       }
 
-      print(jsonDecode(response.body));
-
       return jsonDecode(response.body);
     } catch (e) {
       if (e is ApiException) {

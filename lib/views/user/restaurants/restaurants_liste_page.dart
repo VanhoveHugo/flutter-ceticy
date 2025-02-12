@@ -37,7 +37,10 @@ class RestaurantListPage extends StatelessWidget {
                             'assets/icons/Time-Circle.svg',
                             width: 20,
                             height: 20,
-                            color: Theme.of(context).colorScheme.primary,
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.primary,
+                              BlendMode.srcIn,
+                            ),
                           ),
                           const SizedBox(width: 5),
                           Text(
@@ -57,7 +60,10 @@ class RestaurantListPage extends StatelessWidget {
                             'assets/icons/Card.svg',
                             width: 24,
                             height: 24,
-                            color: Theme.of(context).colorScheme.primary,
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.primary,
+                              BlendMode.srcIn,
+                            ),
                           ),
                           const SizedBox(width: 5),
                           for (var i = 0; i < 3; i++)

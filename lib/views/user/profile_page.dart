@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,10 @@ class ProfilePage extends StatelessWidget {
                           AppAsset.getSvg("settings_outline"),
                           width: 24,
                           height: 24,
-                          color: Theme.of(context).colorScheme.onSurface,
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.onSurface,
+                            BlendMode.srcIn,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -112,7 +115,10 @@ class ProfilePage extends StatelessWidget {
                                   AppAsset.getSvg("flash_outline"),
                                   width: 40,
                                   height: 40,
-                                  color: Colors.black,
+                                  colorFilter: ColorFilter.mode(
+                                    Colors.black,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                                 TextButton(
                                   onPressed: () {
@@ -186,7 +192,11 @@ class ProfilePage extends StatelessWidget {
                               AppAsset.getSvg("flash_outline"),
                               width: 50,
                               height: 50,
-                              color: Theme.of(context).colorScheme.onSurface),
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.onSurface,
+                                BlendMode.srcIn,
+                              ),
+                            ),
                         );
                       },
                     ),

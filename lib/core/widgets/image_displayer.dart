@@ -6,9 +6,9 @@ class ImageDisplayer extends StatelessWidget {
   final Restaurant restaurant;
 
   const ImageDisplayer({
-    Key? key,
+    super.key,
     required this.restaurant,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     String imageUrl =

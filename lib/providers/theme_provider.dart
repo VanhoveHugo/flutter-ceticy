@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ceticy/core/style/app_theme.dart';
@@ -12,7 +13,7 @@ class ThemeProvider with ChangeNotifier {
   ThemeData get currentTheme {
     if (_themeMode == AppThemeMode.light) return AppTheme.lightTheme;
     if (_themeMode == AppThemeMode.dark) return AppTheme.darkTheme;
-    return WidgetsBinding.instance.window.platformBrightness == Brightness.dark
+    return PlatformDispatcher.instance.platformBrightness == Brightness.dark
         ? AppTheme.darkTheme
         : AppTheme.lightTheme;
   }

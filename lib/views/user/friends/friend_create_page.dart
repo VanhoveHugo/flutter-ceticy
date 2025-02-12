@@ -9,7 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 class FriendsCreatePage extends StatefulWidget {
-  const FriendsCreatePage({Key? key}) : super(key: key);
+  const FriendsCreatePage({super.key});
 
   @override
   FriendsCreatePageState createState() => FriendsCreatePageState();
@@ -24,14 +24,19 @@ class FriendsCreatePageState extends State<FriendsCreatePage> {
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
 
+    final contextRef = context;
+
     try {
-      final auth = Provider.of<AuthProvider>(context, listen: false);
+      final auth = Provider.of<AuthProvider>(contextRef, listen: false);
 
       if (auth.isManager) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Vous ne pouvez pas ajouter d\'ami en tant que manager')),
+        if (!contextRef.mounted) return;
+        ScaffoldMessenger.of(contextRef).showSnackBar(
+          const SnackBar(
+              content: Text(
+                  'Vous ne pouvez pas ajouter d\'ami en tant que manager')),
         );
-        Navigator.pop(context);
+        Navigator.pop(contextRef);
         return;
       }
 
@@ -53,23 +58,24 @@ class FriendsCreatePageState extends State<FriendsCreatePage> {
           },
           body: body);
 
+      if (!context.mounted) return;
+
       if (request.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(contextRef).showSnackBar(
           const SnackBar(content: Text('Demande d\'ami envoyée')),
         );
-        Navigator.pop(context);
+        Navigator.pop(contextRef);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(contextRef).showSnackBar(
           SnackBar(content: Text('Erreur : ${request.reasonPhrase}')),
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(contextRef).showSnackBar(
         SnackBar(content: Text('Erreur : $e')),
       );
     } finally {
-      setState(() {
-      });
+      setState(() {});
     }
   }
 
@@ -87,8 +93,7 @@ class FriendsCreatePageState extends State<FriendsCreatePage> {
             children: [
               TextFormField(
                 controller: emailController,
-                decoration:
-                    const InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) =>
                     value!.isEmpty ? 'Ce champ est requis' : null,
               ),

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class RegisterForm extends StatefulWidget {
   final Function(String, String) onSubmit;
 
-  const RegisterForm({Key? key, required this.onSubmit}) : super(key: key);
+  const RegisterForm({super.key, required this.onSubmit});
 
   @override
   RegisterFormState createState() => RegisterFormState();

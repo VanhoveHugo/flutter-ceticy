@@ -11,7 +11,7 @@ import 'package:ceticy/views/user/profile_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class UserNavigation extends StatefulWidget {
-  const UserNavigation({Key? key}) : super(key: key);
+  const UserNavigation({super.key});
 
   @override
   UserNavigationState createState() => UserNavigationState();
@@ -44,9 +44,11 @@ class UserNavigationState extends State<UserNavigation> {
                 'assets/icons/Notification.svg',
                 width: 40,
                 height: 40,
-                color: Theme.of(context)
-                    .bottomNavigationBarTheme
-                    .unselectedItemColor,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).bottomNavigationBarTheme.unselectedItemColor
+                      as Color,
+                  BlendMode.srcIn,
+                ),
               ),
               onPressed: () {
                 NotificationModal.show(context, 'Nouvelle notification',
@@ -58,9 +60,11 @@ class UserNavigationState extends State<UserNavigation> {
                 'assets/icons/Settings.svg',
                 width: 40,
                 height: 40,
-                color: Theme.of(context)
-                    .bottomNavigationBarTheme
-                    .unselectedItemColor,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).bottomNavigationBarTheme.unselectedItemColor
+                      as Color,
+                  BlendMode.srcIn,
+                ),
               ),
               onPressed: () {
                 showModalBottomSheet(
@@ -82,8 +86,10 @@ class UserNavigationState extends State<UserNavigation> {
                                   AppAsset.getSvg("send"),
                                   width: 24,
                                   height: 24,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.onSurface,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
@@ -105,8 +111,10 @@ class UserNavigationState extends State<UserNavigation> {
                                   AppAsset.getSvg("gear"),
                                   width: 24,
                                   height: 24,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.onSurface,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
@@ -156,11 +164,14 @@ class UserNavigationState extends State<UserNavigation> {
                       : AppAsset.getSvg("grid_outline"),
                   width: 30,
                   height: 30,
-                  color: index == 0
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context)
-                          .bottomNavigationBarTheme
-                          .unselectedItemColor,
+                  colorFilter: ColorFilter.mode(
+                    index == 0
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context)
+                            .bottomNavigationBarTheme
+                            .unselectedItemColor as Color,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 label: 'Découvrir',
               ),
@@ -171,11 +182,14 @@ class UserNavigationState extends State<UserNavigation> {
                       : AppAsset.getSvg("cards_outline"),
                   width: 30,
                   height: 30,
-                  color: index == 1
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context)
-                          .bottomNavigationBarTheme
-                          .unselectedItemColor,
+                  colorFilter: ColorFilter.mode(
+                    index == 1
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context)
+                            .bottomNavigationBarTheme
+                            .unselectedItemColor as Color,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 label: 'Découvrir',
               ),
@@ -186,11 +200,14 @@ class UserNavigationState extends State<UserNavigation> {
                       : AppAsset.getSvg("heart_outline"),
                   width: 30,
                   height: 30,
-                  color: index == 2
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context)
-                          .bottomNavigationBarTheme
-                          .unselectedItemColor,
+                  colorFilter: ColorFilter.mode(
+                    index == 2
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context)
+                            .bottomNavigationBarTheme
+                            .unselectedItemColor as Color,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 label: 'Favoris',
               ),
@@ -201,11 +218,14 @@ class UserNavigationState extends State<UserNavigation> {
                       : AppAsset.getSvg("user_outline"),
                   width: 30,
                   height: 30,
-                  color: index == 3
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context)
-                          .bottomNavigationBarTheme
-                          .unselectedItemColor,
+                  colorFilter: ColorFilter.mode(
+                    index == 3
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context)
+                            .bottomNavigationBarTheme
+                            .unselectedItemColor as Color,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 label: 'Profil',
               ),

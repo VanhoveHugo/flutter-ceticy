@@ -7,12 +7,12 @@ class ChoiceInput extends StatelessWidget {
   final ValueChanged<int> onChanged;
 
   const ChoiceInput({
-    Key? key,
+    super.key,
     required this.label,
     required this.selectedValue,
     required this.value,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
 
   @override

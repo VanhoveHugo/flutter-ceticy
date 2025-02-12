@@ -99,7 +99,7 @@ class Category {
 class CategoryTile extends StatelessWidget {
   final Category category;
 
-  const CategoryTile({Key? key, required this.category}) : super(key: key);
+  const CategoryTile({super.key, required this.category});
 
   @override
   Widget build(BuildContext context) {

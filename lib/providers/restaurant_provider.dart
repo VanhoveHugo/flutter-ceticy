@@ -135,7 +135,10 @@ class RestaurantProvider with ChangeNotifier {
       }
 
       notifyListeners();
-    } catch (error) {}
+    } catch (error) {
+      _errorMessage = error.toString();
+      notifyListeners();
+    }
   }
 
   static String getEstimatedTime(int? averageService) {
@@ -170,6 +173,10 @@ class RestaurantProvider with ChangeNotifier {
 
       await RestaurantService.createRestaurant(token, name, description,
           averagePrice, averageService, phoneNumber, thumbnail);
+
+      if (!context.mounted) {
+        return;
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

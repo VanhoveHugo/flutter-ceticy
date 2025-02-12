@@ -51,7 +51,10 @@ void showSubscriptionModal(BuildContext context) {
                       AppAsset.getSvg("video_call"),
                       width: 64,
                       height: 64,
-                      color: Colors.black,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     const Text(
@@ -203,14 +206,14 @@ class SubscriptionCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const SubscriptionCard({
-    Key? key,
+    super.key,
     required this.duration,
     required this.price,
     required this.monthly,
     required this.discount,
     required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -89,6 +89,10 @@ class PollProvider with ChangeNotifier {
 
       fetchAllPolls();
 
+      if (!context.mounted) {
+        return;
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -138,6 +142,10 @@ class PollProvider with ChangeNotifier {
 
       fetchAllPolls();
 
+      if (!context.mounted) {
+        return;
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -158,8 +166,4 @@ class PollProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-}
-
-extension on String {
-  get poll => null;
 }

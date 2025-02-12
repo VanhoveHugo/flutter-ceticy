@@ -6,7 +6,7 @@ import 'package:ceticy/core/widgets/buttons/primary_button.dart';
 import 'package:ceticy/core/widgets/buttons/secondary_button.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   LoginPageState createState() => LoginPageState();

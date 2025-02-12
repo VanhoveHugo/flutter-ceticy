@@ -8,7 +8,7 @@ import 'package:ceticy/views/manager/profile_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ManagerNavigation extends StatefulWidget {
-  const ManagerNavigation({Key? key}) : super(key: key);
+  const ManagerNavigation({super.key});
 
   @override
   ManagerNavigationState createState() => ManagerNavigationState();
@@ -38,9 +38,12 @@ class ManagerNavigationState extends State<ManagerNavigation> {
                 'assets/icons/Settings.svg',
                 width: 40,
                 height: 40,
-                color: Theme.of(context)
-                    .bottomNavigationBarTheme
-                    .unselectedItemColor,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .unselectedItemColor as Color,
+                  BlendMode.srcIn,
+                ),
               ),
               onPressed: () {
                 showModalBottomSheet(
@@ -62,8 +65,10 @@ class ManagerNavigationState extends State<ManagerNavigation> {
                                   AppAsset.getSvg("send"),
                                   width: 24,
                                   height: 24,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.onSurface,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
@@ -85,8 +90,10 @@ class ManagerNavigationState extends State<ManagerNavigation> {
                                   AppAsset.getSvg("gear"),
                                   width: 24,
                                   height: 24,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.onSurface,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(

@@ -241,7 +241,9 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
                               if (!_formKey.currentState!.validate() ||
                                   _averagePriceValue == 0 ||
                                   _averageServiceValue == 0 ||
-                                  !_isImageValid) return;
+                                  !_isImageValid) {
+                                return;
+                              }
 
                               pollProvider.createRestaurant(
                                   context,
@@ -270,7 +272,7 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
                     Container(
                       color: Theme.of(context)
                           .scaffoldBackgroundColor
-                          .withOpacity(0.8),
+                          .withValues(alpha: 0.8),
                       child: const Center(
                           child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

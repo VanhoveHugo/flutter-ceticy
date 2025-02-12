@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DashboardPage extends StatelessWidget {
-  const DashboardPage({Key? key}) : super(key: key);
+  const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class DashboardPage extends StatelessWidget {
                                 Theme.of(context).scaffoldBackgroundColor,
                                 Theme.of(context)
                                     .scaffoldBackgroundColor
-                                    .withOpacity(0),
+                                    .withValues(alpha: 0),
                               ],
                               begin: Alignment.centerLeft,
                               end: Alignment.centerRight,
@@ -84,7 +84,7 @@ class DashboardPage extends StatelessWidget {
                               colors: [
                                 Theme.of(context)
                                     .scaffoldBackgroundColor
-                                    .withOpacity(0),
+                                    .withValues(alpha: 0),
                                 Theme.of(context).scaffoldBackgroundColor
                               ],
                               begin: Alignment.centerLeft,
@@ -198,8 +198,7 @@ class RestaurantCard extends StatelessWidget {
   final int index;
 
   const RestaurantCard(
-      {Key? key, required this.restaurant, required this.index})
-      : super(key: key);
+      {super.key, required this.restaurant, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +221,7 @@ class RestaurantCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Color.fromRGBO(0, 0, 0, 0.1),
               blurRadius: 8,
               spreadRadius: 2,
             ),
@@ -289,8 +288,7 @@ class RestaurantCard extends StatelessWidget {
       ],
     ).then((value) {
       if (value == 'delete') {
-        final restaurantProvider =
-            Provider.of<RestaurantProvider>(context, listen: false);
+        // final restaurantProvider = Provider.of<RestaurantProvider>(context, listen: false);
         // restaurantProvider.removeRestaurant(index);
       }
     });

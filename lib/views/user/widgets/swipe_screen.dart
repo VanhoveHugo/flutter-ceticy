@@ -35,7 +35,6 @@ class SwipeScreenState extends State<SwipeScreen> {
   }
 
   void triggerSuperLikeAction() {
-    print("super like");
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -165,7 +164,7 @@ class SwipeScreenState extends State<SwipeScreen> {
                             borderRadius: BorderRadius.circular(32),
                             color: Theme.of(context)
                                 .scaffoldBackgroundColor
-                                .withOpacity(.8)),
+                                .withValues(alpha: 0.8)),
                         child: Text(
                           restaurant.name,
                           style: TextStyle(
@@ -187,7 +186,7 @@ class SwipeScreenState extends State<SwipeScreen> {
                               borderRadius: BorderRadius.circular(24),
                               color: Theme.of(context)
                                   .scaffoldBackgroundColor
-                                  .withOpacity(.8)),
+                                  .withValues(alpha: 0.8)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -197,8 +196,10 @@ class SwipeScreenState extends State<SwipeScreen> {
                                     'assets/icons/Time-Circle.svg',
                                     width: 20,
                                     height: 20,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    colorFilter: ColorFilter.mode(
+                                      Theme.of(context).colorScheme.primary,
+                                      BlendMode.srcIn,
+                                    ),
                                   ),
                                   const SizedBox(width: 5),
                                   Text(
@@ -218,8 +219,10 @@ class SwipeScreenState extends State<SwipeScreen> {
                                     'assets/icons/Card.svg',
                                     width: 24,
                                     height: 24,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    colorFilter: ColorFilter.mode(
+                                      Theme.of(context).colorScheme.primary,
+                                      BlendMode.srcIn,
+                                    ),
                                   ),
                                   const SizedBox(width: 5),
                                   for (var i = 0; i < 3; i++)
@@ -241,8 +244,10 @@ class SwipeScreenState extends State<SwipeScreen> {
                                     'assets/icons/Location.svg',
                                     width: 24,
                                     height: 24,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    colorFilter: ColorFilter.mode(
+                                      Theme.of(context).colorScheme.primary,
+                                      BlendMode.srcIn,
+                                    ),
                                   ),
                                   const SizedBox(width: 5),
                                   Text(

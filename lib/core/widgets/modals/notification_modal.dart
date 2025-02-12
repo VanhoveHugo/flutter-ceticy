@@ -33,11 +33,10 @@ class _NotificationWidget extends StatefulWidget {
   final VoidCallback onClose;
 
   const _NotificationWidget({
-    Key? key,
     required this.title,
     required this.message,
     required this.onClose,
-  }) : super(key: key);
+  });
 
   @override
   State<_NotificationWidget> createState() => _NotificationWidgetState();
@@ -77,7 +76,7 @@ class _NotificationWidgetState extends State<_NotificationWidget>
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Color.fromRGBO(0, 0, 0, 0.2),
                 offset: const Offset(0, 2),
                 blurRadius: 8,
               ),

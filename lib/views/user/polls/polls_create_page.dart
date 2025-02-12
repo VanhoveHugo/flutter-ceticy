@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:ceticy/core/widgets/buttons/primary_button.dart';
 import 'package:ceticy/services/friend_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:ceticy/providers/poll_provider.dart';
@@ -19,7 +16,7 @@ class CreatePollPage extends StatefulWidget {
 class CreatePollPageState extends State<CreatePollPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
-  var friends;
+  late Future friends;
 
   File? _selectedImage;
 
@@ -39,8 +36,6 @@ class CreatePollPageState extends State<CreatePollPage> {
     super.initState();
     friends = FriendService.fetchAllPolls(
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwic2NvcGUiOiJ1c2VyIiwiaWF0IjoxNzM5MTE4MDc2fQ.01FgsHsJBqZuacr3s1_kTtvMmjzNe2h9gdEuds0tWwI");
-    // print le type of friends
-    print(friends.runtimeType);
   }
 
   @override
@@ -275,7 +270,7 @@ class CreatePollPageState extends State<CreatePollPage> {
                     Container(
                       color: Theme.of(context)
                           .scaffoldBackgroundColor
-                          .withOpacity(0.2),
+                          .withValues(alpha: 0.2),
                       child: const Center(
                         child: CircularProgressIndicator(),
                       ),
