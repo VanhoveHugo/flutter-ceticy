@@ -26,27 +26,37 @@ jobs:
       # Build iOS en mode release sans codesign
       - run: flutter build ios --release --no-codesign
 
-      # Préparation de l'IPA
-      - run: |
-          mkdir -p Payload
-          mv build/ios/iphoneos/Runner.app Payload/
-          cd build/ios/iphoneos
-          zip -r9 FlutterIpaExport.ipa Payload
-        working-directory: .
+      # Archivage avec Xcode
+      - name: Archive iOS App
+        run: |
+          xcodebuild -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath build/ios/archive.xcarchive \
+            archive
+
+      # Exportation du fichier IPA avec signature
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath build/ios/archive.xcarchive \
+            -exportOptionsPlist ios/exportOptions.plist \
+            -exportPath build/ios/iphoneos
 
       # Création du tag basé sur le commit
       - name: Create Git Tag
         run: |
-          TAG_NAME="release-${GITHUB_SHA::8}"  # Crée un tag court basé sur le hash du commit
+          TAG_NAME="release-${GITHUB_SHA::8}"
           git tag $TAG_NAME
-          git push origin $TAG_NAME
+          git push origin $TAG_NAME || echo "Tag already exists"
 
       # Téléversement de l'IPA vers GitHub Releases
       - name: Upload IPA to Release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/ios/iphoneos/FlutterIpaExport.ipa
+          file: build/ios/iphoneos/Runner.ipa
           tag: release-${GITHUB_SHA::8}
           overwrite: true
           body: "Automated release for commit ${GITHUB_SHA::8}"
