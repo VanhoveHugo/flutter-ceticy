@@ -11,14 +11,21 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  flutter_svg: ^0.22.0
+  flutter_svg: ^2.0.17
   swipe_cards: ^2.0.0+1
+  http: ^1.2.2
+  flutter_secure_storage: ^9.2.4
+  image_picker: ^1.1.2
+  provider: ^6.1.2
+  shared_preferences: ^2.3.3
+  qr_flutter: ^4.1.0
+  http_parser: ^4.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
-  flutter_native_splash: ^1.2.0
+  flutter_lints: ^5.0.0
+  flutter_native_splash: ^2.4.4
 
 flutter:
   uses-material-design: true
@@ -26,10 +33,14 @@ flutter:
     - assets/images/
     - assets/icons/
 
-# splash screen configuration
-flutter_native_splash:
-  color: "#000000"
-  image: assets/images/logo-512.png
+flutter_icons:
   android: true
   ios: true
+  image_path: "assets/images/favicon.png"
+
+flutter_native_splash:
+  android: true
+  ios: true
+  color: "#000000"
+  image: "assets/images/logo-512.png"
   image_fit: "fill"
