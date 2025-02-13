@@ -31,7 +31,7 @@ jobs:
       # Création du tag basé sur le commit
       - name: Create Git Tag
         run: |
-          TAG_NAME="release-${GITHUB_SHA::8}"  # Crée un tag court basé sur le hash du commit
+          TAG_NAME="release_${GITHUB_SHA::8}"  # Crée un tag court basé sur le hash du commit
           git tag $TAG_NAME
           git push origin $TAG_NAME
       # Téléversement de l'IPA vers GitHub Releases
@@ -40,6 +40,6 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/ios/iphoneos/CeticyIpaExport.ipa
-          tag: release-${GITHUB_SHA::8}
+          tag: release_${GITHUB_SHA::8}
           overwrite: true
           body: "Automated release for commit ${GITHUB_SHA::8}"
