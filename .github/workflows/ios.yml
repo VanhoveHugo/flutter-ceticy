@@ -1,62 +1,43 @@
 name: iOS Release Build
-
 on:
   push:
     branches:
-      - main
-
+      - master
 jobs:
   build-ios:
     name: 🎉 Build iOS Release
     runs-on: macos-latest
-
     steps:
       # Vérification du code source
       - uses: actions/checkout@v3
-
       # Setup de Flutter
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           architecture: x64
-
       # Installation des dépendances Flutter
       - run: flutter pub get
-
       # Build iOS en mode release sans codesign
       - run: flutter build ios --release --no-codesign
-
-      # Archivage avec Xcode
-      - name: Archive iOS App
-        run: |
-          xcodebuild -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -sdk iphoneos \
-            -configuration Release \
-            -archivePath build/ios/archive.xcarchive \
-            archive
-
-      # Exportation du fichier IPA avec signature
-      - name: Export IPA
-        run: |
-          xcodebuild -exportArchive \
-            -archivePath build/ios/archive.xcarchive \
-            -exportOptionsPlist ios/exportOptions.plist \
-            -exportPath build/ios/iphoneos
-
+      # Préparation de l'IPA
+      - run: |
+          cd build/ios/iphoneos
+          mkdir -p Payload
+          mv Runner.app Payload/
+          zip -r9 CeticyIpaExport.ipa Payload
+        working-directory: .
       # Création du tag basé sur le commit
       - name: Create Git Tag
         run: |
-          TAG_NAME="release-${GITHUB_SHA::8}"
+          TAG_NAME="release-${GITHUB_SHA::8}"  # Crée un tag court basé sur le hash du commit
           git tag $TAG_NAME
-          git push origin $TAG_NAME || echo "Tag already exists"
-
+          git push origin $TAG_NAME
       # Téléversement de l'IPA vers GitHub Releases
       - name: Upload IPA to Release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/ios/iphoneos/Runner.ipa
+          file: build/ios/iphoneos/CeticyIpaExport.ipa
           tag: release-${GITHUB_SHA::8}
           overwrite: true
           body: "Automated release for commit ${GITHUB_SHA::8}"
