@@ -11,22 +11,17 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # Vérification du code source
       - uses: actions/checkout@v3
 
-      # Setup de Flutter
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           architecture: x64
 
-      # Installation des dépendances Flutter
       - run: flutter pub get
 
-      # Build iOS en mode release sans codesign
       - run: flutter build ios --release --no-codesign
 
-      # Préparation de l'IPA
       - run: |
           mkdir -p Payload
           mv build/ios/iphoneos/Runner.app Payload/
@@ -34,14 +29,12 @@ jobs:
           zip -r9 FlutterIpaExport.ipa Payload
         working-directory: .
 
-      # Création du tag basé sur le commit
       - name: Create Git Tag
         run: |
           TAG_NAME="release-${GITHUB_SHA::8}"  # Crée un tag court basé sur le hash du commit
           git tag $TAG_NAME
           git push origin $TAG_NAME
 
-      # Téléversement de l'IPA vers GitHub Releases
       - name: Upload IPA to Release
         uses: svenstaro/upload-release-action@v2
         with:

@@ -1,0 +1,48 @@
+name: Android Release Build
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  build-android:
+    name: 🤖 Build Android Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          architecture: x64
+
+      - run: flutter pub get
+
+      - run: flutter build apk --release
+
+      - run: flutter build appbundle --release
+
+      - name: Create Git Tag
+        run: |
+          TAG_NAME="release_${GITHUB_SHA::8}"  # Crée un tag court basé sur le hash du commit
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+
+      - name: Upload APK to Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/app/outputs/flutter-apk/app-release.apk
+          tag_name: release_${GITHUB_SHA::8}
+          overwrite: true
+          body: "Automated release for commit ${GITHUB_SHA::8}"
+
+      - name: Upload AAB to Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/app/outputs/bundle/release/app-release.aab
+          tag_name: release_${GITHUB_SHA::8}
+          overwrite: true
+          body: "Automated release for commit ${GITHUB_SHA::8}"
