@@ -1,11 +1,11 @@
 # 🌍📱 Ceticy - Cross-Platform Application (iOS | Android | Web)
 
-Welcome to **Ceticy**, a mobile and web application developed with **Flutter**, supporting **iOS, Android, and Web**.  
+Welcome to **Ceticy**, a mobile and web application developed with **Flutter**, supporting **iOS, Android, and Web**.
 The application is automatically deployed using **GitHub Actions**.
 
 ## 🚀 **Features**
-✅ Available on **iOS, Android, and Web**  
-✅ Smooth and modern user interface  
+✅ Available on **iOS, Android, and Web**
+✅ Smooth and modern user interface
 
 ---
 
@@ -45,19 +45,19 @@ flutter run
 ---
 
 ## 🛠 **Build Commands**
-📱 **Android** (Generate APK)  
+📱 **Android** (Generate APK)
 ```sh
 flutter build apk --release
 ```
-📦 **Android App Bundle (AAB)**  
+📦 **Android App Bundle (AAB)**
 ```sh
 flutter build appbundle --release
 ```
-🍏 **iOS** (Without code signing)  
+🍏 **iOS** (Without code signing)
 ```sh
 flutter build ios --release --no-codesign
 ```
-🌍 **Web**  
+🌍 **Web**
 ```sh
 flutter build web
 ```
