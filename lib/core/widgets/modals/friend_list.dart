@@ -13,10 +13,10 @@ class FriendsList extends StatefulWidget {
   });
 
   @override
-  _FriendsListState createState() => _FriendsListState();
+  FriendsListState createState() => FriendsListState();
 }
 
-class _FriendsListState extends State<FriendsList> {
+class FriendsListState extends State<FriendsList> {
   late List<int> selectedFriends;
 
   @override

@@ -16,8 +16,6 @@ class HomePage extends StatelessWidget {
     final polls = pollProvider.polls;
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    print(authProvider.currentLikeCount);
-
     return SafeArea(
         child: SingleChildScrollView(
             child: Padding(

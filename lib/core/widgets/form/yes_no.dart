@@ -1,45 +1,51 @@
 import 'package:flutter/material.dart';
 
 class YesNo extends StatefulWidget {
-  bool? vote;
+  final bool? initialVote;
 
-  YesNo({super.key, required this.vote});
+  const YesNo({super.key, required this.initialVote});
 
   @override
   YesNoState createState() => YesNoState();
 }
 
 class YesNoState extends State<YesNo> {
+  bool? vote;
+
+  @override
+  void initState() {
+    super.initState();
+    vote = widget.initialVote;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return  Row(
-              children: [
-                Expanded(
-                  child: CheckboxListTile(
-                    value: widget.vote == true, // Coche uniquement si vote est true
-                    onChanged: (value) {
-                      setState(() {
-                        widget.vote = true;
-                      });
-                    },
-                    title: Text("Oui"),
-                    controlAffinity: ListTileControlAffinity.leading,
-                  ),
-                ),
-                Expanded(
-                  child: CheckboxListTile(
-                    value: widget.vote == false, // Coche uniquement si vote est false
-                    onChanged: (value) {
-                      setState(() {
-                        widget.vote = false
-                            ; // Toggle entre null et false
-                      });
-                    },
-                    title: Text("Non", textAlign: TextAlign.end),
-                  ),
-                ),
-              ],
-            );
+    return Row(
+      children: [
+        Expanded(
+          child: CheckboxListTile(
+            value: vote == true,
+            onChanged: (value) {
+              setState(() {
+                vote = true;
+              });
+            },
+            title: const Text("Oui"),
+            controlAffinity: ListTileControlAffinity.leading,
+          ),
+        ),
+        Expanded(
+          child: CheckboxListTile(
+            value: vote == false,
+            onChanged: (value) {
+              setState(() {
+                vote = false;
+              });
+            },
+            title: const Text("Non", textAlign: TextAlign.end),
+          ),
+        ),
+      ],
+    );
   }
 }

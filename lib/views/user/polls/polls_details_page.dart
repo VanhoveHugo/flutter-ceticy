@@ -18,7 +18,6 @@ class PollsDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     int pollId = poll.options[0].restaurantId;
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    bool? vote;
 
     String token = authProvider.token!;
 
@@ -190,7 +189,7 @@ class PollsDetailsPage extends StatelessWidget {
               ),
             ),
 
-            YesNo(vote: vote),
+            YesNo(initialVote: null),
 
             // Text(
             //   'Choix de la date',
