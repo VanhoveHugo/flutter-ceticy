@@ -45,7 +45,7 @@ class ActionButtons extends StatelessWidget {
           ),
           _buildIconButton(
             icon: SvgPicture.asset(
-              AppAsset.getSvg("heart"),
+              AppAsset.getSvg("Heart"),
               width: 30,
               height: 30,
               colorFilter: ColorFilter.mode(

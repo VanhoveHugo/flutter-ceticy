@@ -72,13 +72,41 @@ class SwipeScreenState extends State<SwipeScreen> {
                       Tab(text: 'Avis'),
                     ],
                   ),
-                  const Expanded(
+                  Expanded(
                     child: TabBarView(
                       children: [
-                        Text('À propos'),
-                        Text('Menu'),
-                        Text('Galerie'),
-                        Text('Avis'),
+                        SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 16),
+                              Text(
+                              'Description',
+                              style: Theme.of(context).textTheme.titleLarge,
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(
+                              'Fonctionnalité à venir',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              textAlign: TextAlign.left,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Contact',
+                              style: Theme.of(context).textTheme.titleLarge,
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(
+                                'Fonctionnalité à venir',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Center(child: Text('Fonctionnalité à venir')),
+                        Center(child: Text('Fonctionnalité à venir')),
+                        Center(child: Text('Fonctionnalité à venir')),
                       ],
                     ),
                   ),
@@ -148,9 +176,8 @@ class SwipeScreenState extends State<SwipeScreen> {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(24)),
                         child: FittedBox(
-                          fit: BoxFit.cover,
-                          child: ImageDisplayer(restaurant: restaurant)
-                        ),
+                            fit: BoxFit.cover,
+                            child: ImageDisplayer(restaurant: restaurant)),
                       ),
                     ),
                     Positioned(

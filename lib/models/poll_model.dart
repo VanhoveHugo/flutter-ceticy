@@ -20,12 +20,18 @@ class Poll {
       json['id'],
       json['name'],
       json['creatorId'],
-      (json['options'] as List<dynamic>? ?? [])
-          .map((option) => PollOption.fromJson(option))
-          .toList(),
-      (json['participants'] as List<dynamic>? ?? [])
-          .map((participant) => PollParticipant.fromJson(participant))
-          .toList(),
+      (json['options'] as String?)
+              ?.split(",")
+              .map((p) => PollOption(json['id'], json['id'],
+                  int.parse(p)))
+              .toList() ??
+          [],
+      (json['participants'] as String?)
+              ?.split(",")
+              .map((p) => PollParticipant(json['id'], json['id'],
+                  int.parse(p)))
+              .toList() ??
+          [],
       (json['votes'] as List<dynamic>? ?? [])
           .map((vote) => PollVote.fromJson(vote))
           .toList(),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:ceticy/core/widgets/buttons/primary_button.dart';
 import 'package:ceticy/core/widgets/form/choice_input.dart';
 import 'package:ceticy/providers/restaurant_provider.dart';
@@ -27,13 +28,16 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
 
   File? _selectedImage;
   bool _isImageValid = true;
+  Uint8List? _webImage;
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes(); // Lire en Uint8List
       setState(() {
+        _webImage = bytes;
         _selectedImage = File(pickedFile.path);
         _isImageValid = true;
       });
@@ -75,7 +79,9 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(12),
                                         image: DecorationImage(
-                                          image: FileImage(_selectedImage!),
+                                          image: _webImage != null
+                                              ? MemoryImage(_webImage!) as ImageProvider<Object>
+                                              : FileImage(_selectedImage!) as ImageProvider<Object>,
                                           fit: BoxFit.cover,
                                         ),
                                       ),

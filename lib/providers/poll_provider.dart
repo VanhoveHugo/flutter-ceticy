@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ceticy/models/api_exception.dart';
 import 'package:ceticy/models/poll_model.dart';
 import 'package:ceticy/providers/auth_provider.dart';
@@ -60,8 +62,9 @@ class PollProvider with ChangeNotifier {
         throw Exception("Token utilisateur manquant.");
       }
 
-      final List res = await PollService.fetchAllPolls(token);
-      _polls = res.map((e) => Poll.fromJson(e)).toList();
+      final String res = await PollService.fetchAllPolls(token);
+      final List<dynamic> data = jsonDecode(res);
+      _polls = data.map((e) => Poll.fromJson(e)).toList();
     } catch (error) {
       _errorMessage = error.toString();
     } finally {
@@ -76,7 +79,8 @@ class PollProvider with ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> createPoll(BuildContext context, String name) async {
+  Future<void> createPoll(BuildContext context, String name, List friendsArray,
+      int selectedRestaurant) async {
     _startFunction();
 
     try {
@@ -85,7 +89,8 @@ class PollProvider with ChangeNotifier {
         throw Exception("Token utilisateur manquant.");
       }
 
-      await PollService.createPoll(token, name);
+      await PollService.createPoll(
+          token, name, friendsArray, selectedRestaurant);
 
       fetchAllPolls();
 
@@ -103,8 +108,6 @@ class PollProvider with ChangeNotifier {
           duration: const Duration(seconds: 3),
         ),
       );
-
-      Navigator.of(context).pop();
     } catch (error) {
       if (error is ApiException) {
         if (error.kind == "content_limit") {
@@ -119,12 +122,12 @@ class PollProvider with ChangeNotifier {
               duration: const Duration(seconds: 5),
             ),
           );
-          Navigator.of(context).pop();
         }
       } else {
         _errorMessage = "Erreur inconnue lors de la création du sondage.";
       }
     } finally {
+      Navigator.of(context).pop();
       _isLoading = false;
       notifyListeners();
     }
@@ -156,12 +159,10 @@ class PollProvider with ChangeNotifier {
           duration: const Duration(seconds: 3),
         ),
       );
-
-      Navigator.of(context).pop();
-
     } catch (error) {
       _errorMessage = error.toString();
     } finally {
+      Navigator.pop(context);
       _isLoading = false;
       notifyListeners();
     }

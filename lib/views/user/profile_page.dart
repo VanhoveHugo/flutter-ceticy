@@ -79,7 +79,7 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const Icon(Icons.arrow_forward_ios, size: 16),
+                    Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).colorScheme.onSurface),
                   ],
                 ),
               ),
@@ -168,41 +168,41 @@ class ProfilePage extends StatelessWidget {
                       ))
                 ],
               )),
-          const SizedBox(height: 24),
-          Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Récompenses',
-                    style: Theme.of(context).textTheme.titleLarge,
-                    textAlign: TextAlign.left,
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 50,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: SvgPicture.asset(
-                              AppAsset.getSvg("flash_outline"),
-                              width: 50,
-                              height: 50,
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.onSurface,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                        );
-                      },
-                    ),
-                  )
-                ],
-              )),
+          // const SizedBox(height: 24),
+          // Padding(
+          //     padding: const EdgeInsets.symmetric(vertical: 8),
+          //     child: Column(
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Text(
+          //           'Récompenses',
+          //           style: Theme.of(context).textTheme.titleLarge,
+          //           textAlign: TextAlign.left,
+          //         ),
+          //         const SizedBox(height: 16),
+          //         SizedBox(
+          //           height: 50,
+          //           child: ListView.builder(
+          //             scrollDirection: Axis.horizontal,
+          //             itemCount: 10,
+          //             itemBuilder: (context, index) {
+          //               return Padding(
+          //                 padding: const EdgeInsets.only(right: 8),
+          //                 child: SvgPicture.asset(
+          //                     AppAsset.getSvg("flash_outline"),
+          //                     width: 50,
+          //                     height: 50,
+          //                     colorFilter: ColorFilter.mode(
+          //                       Theme.of(context).colorScheme.onSurface,
+          //                       BlendMode.srcIn,
+          //                     ),
+          //                   ),
+          //               );
+          //             },
+          //           ),
+          //         )
+          //       ],
+          //     )),
         ],
       ),
     )));

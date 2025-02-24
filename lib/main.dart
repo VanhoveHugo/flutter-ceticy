@@ -44,7 +44,7 @@ class App extends StatelessWidget {
           theme: themeProvider.currentTheme,
           initialRoute: auth.isAuthenticated ? '/' : '/login',
           routes: appRoutes,
-          // debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: false,
         );
       },
     );
