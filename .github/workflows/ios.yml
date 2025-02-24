@@ -5,6 +5,7 @@ on:
       - main
 permissions:
   contents: write
+  workflows: write
 jobs:
   build-ios:
     name: 🎉 Build iOS Release
