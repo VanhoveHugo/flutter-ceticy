@@ -5,6 +5,7 @@ on:
       - main
 permissions:
   contents: write
+  workflows: write
 jobs:
   build-android:
     name: 🤖 Build Android Release
@@ -19,11 +20,11 @@ jobs:
 
       - run: flutter pub get
 
-      - name: Set Java 17 environment
-        uses: actions/setup-java@v3
+      - name: Set Java 21 environment
+        uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'adoptopenjdk'
+          java-version: '21'
+          distribution: 'temurin'
 
       - run: flutter build apk --release
 
