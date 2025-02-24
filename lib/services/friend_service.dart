@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class FriendService {
-  static Future<List> fetchAllPolls(String token) async {
+  static Future<List> fetchAllFriends(String token) async {
     try {
       final response = await http.get(
         Uri.parse('$apiBaseUrl/friends'),

@@ -21,6 +21,23 @@ class RestaurantService {
     }
   }
 
+  static Future<Restaurant> fetchRestaurantById(String token, int id) async {
+    final response = await http.get(
+      Uri.parse('$apiBaseUrl/restaurants/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return Restaurant.fromJson(data);
+    } else {
+      throw Exception('Failed to load restaurant by id');
+    }
+  }
+
   static Future<List<Restaurant>> fetchLikeRestaurants(String token) async {
     final response =
         await http.get(Uri.parse('$apiBaseUrl/restaurants/like'), headers: {

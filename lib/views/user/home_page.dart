@@ -1,5 +1,6 @@
 import 'package:ceticy/core/widgets/buttons/primary_button.dart';
 import 'package:ceticy/models/poll_model.dart';
+import 'package:ceticy/providers/auth_provider.dart';
 import 'package:ceticy/providers/poll_provider.dart';
 import 'package:ceticy/views/navigation/user_navigation.dart';
 import 'package:ceticy/views/user/polls/polls_details_page.dart';
@@ -13,6 +14,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final pollProvider = Provider.of<PollProvider>(context);
     final polls = pollProvider.polls;
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return SafeArea(
         child: SingleChildScrollView(
@@ -21,7 +23,7 @@ class HomePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Card to incite user to discover new places
+          authProvider.currentLikeCount == 0 ?
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -52,7 +54,8 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-          ),
+          ) : const SizedBox.shrink(),
+
 
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
@@ -116,9 +119,11 @@ class HomePage extends StatelessWidget {
                         ],
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          pollProvider.fetchAllPolls();
+                        },
                         child: Text(
-                          'Voir tout',
+                          'Rafrachir',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
@@ -143,9 +148,18 @@ class HomePage extends StatelessWidget {
                               ),
                             );
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: Text(poll.name),
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              poll.name,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                           ),
                         );
                       },
@@ -153,54 +167,54 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               )),
-          Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'À venir',
-                            style: Theme.of(context).textTheme.titleMedium,
-                            textAlign: TextAlign.left,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '?',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/polls');
-                        },
-                        child: Text(
-                          'Voir tout',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Découvrez les sondages de vos amis et partagez les vôtres.',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.left,
-                  ),
-                ],
-              )),
+          // Padding(
+          //     padding: const EdgeInsets.symmetric(vertical: 8),
+          //     child: Column(
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Row(
+          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //           children: [
+          //             Row(
+          //               children: [
+          //                 Text(
+          //                   'À venir',
+          //                   style: Theme.of(context).textTheme.titleMedium,
+          //                   textAlign: TextAlign.left,
+          //                 ),
+          //                 const SizedBox(width: 8),
+          //                 Text(
+          //                   '?',
+          //                   style: Theme.of(context)
+          //                       .textTheme
+          //                       .titleMedium
+          //                       ?.copyWith(
+          //                         color: Colors.grey,
+          //                         fontWeight: FontWeight.w400,
+          //                       ),
+          //                   textAlign: TextAlign.left,
+          //                 ),
+          //               ],
+          //             ),
+          //             TextButton(
+          //               onPressed: () {
+          //                 Navigator.pushNamed(context, '/polls');
+          //               },
+          //               child: Text(
+          //                 'Voir tout',
+          //                 style: Theme.of(context).textTheme.bodyMedium,
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //         const SizedBox(height: 16),
+          //         Text(
+          //           'Découvrez les sondages de vos amis et partagez les vôtres.',
+          //           style: Theme.of(context).textTheme.bodyMedium,
+          //           textAlign: TextAlign.left,
+          //         ),
+          //       ],
+          //     )),
         ],
       ),
     )));

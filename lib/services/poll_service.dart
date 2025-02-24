@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class PollService {
-  static Future<List> fetchAllPolls(String token) async {
+  static Future<String> fetchAllPolls(String token) async {
     try {
       final response = await http.get(
         Uri.parse('$apiBaseUrl/polls'),
@@ -22,7 +22,7 @@ class PollService {
         );
       }
 
-      return jsonDecode(response.body);
+      return response.body;
     } catch (e) {
       if (e is ApiException) {
         rethrow;
@@ -32,9 +32,10 @@ class PollService {
     }
   }
 
-  static Future<String> createPoll(String token, String name) async {
+  static Future<String> createPoll(
+      String token, String name, List friendsArray, selectedRestaurant) async {
     try {
-      final body = jsonEncode({"name": name});
+      final body = jsonEncode({"name": name, "friendsList": friendsArray, "restaurantsList": selectedRestaurant});
 
       final response = await http.post(
         Uri.parse('$apiBaseUrl/polls'),
@@ -44,6 +45,7 @@ class PollService {
         },
         body: body,
       );
+
 
       if (response.statusCode >= 400) {
         final errorResponse = jsonDecode(response.body);

@@ -1,8 +1,11 @@
-import 'dart:io';
 import 'package:ceticy/core/widgets/buttons/primary_button.dart';
+import 'package:ceticy/core/widgets/image_displayer.dart';
+import 'package:ceticy/core/widgets/modals/bottom_native_modal.dart';
+import 'package:ceticy/core/widgets/modals/friend_list.dart';
+import 'package:ceticy/models/restaurant_model.dart';
+import 'package:ceticy/providers/restaurant_provider.dart';
 import 'package:ceticy/services/friend_service.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:ceticy/providers/poll_provider.dart';
 
@@ -17,25 +20,32 @@ class CreatePollPageState extends State<CreatePollPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   late Future friends;
+  late List<int> friendsArray = [];
+  String friendsArrayError = '';
+  Restaurant? selectedRestaurant;
+  String selectedRestaurantError = '';
 
-  File? _selectedImage;
+  Future<List<dynamic>> fetchFriends() async {
+    try {
+      final response = FriendService.fetchAllFriends(
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwic2NvcGUiOiJ1c2VyIiwiaWF0IjoxNzM5MTE4MDc2fQ.01FgsHsJBqZuacr3s1_kTtvMmjzNe2h9gdEuds0tWwI");
 
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
+      return response;
+    } catch (e) {
+      return [];
     }
   }
 
-  @override
-  initState() {
-    super.initState();
-    friends = FriendService.fetchAllPolls(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwic2NvcGUiOiJ1c2VyIiwiaWF0IjoxNzM5MTE4MDc2fQ.01FgsHsJBqZuacr3s1_kTtvMmjzNe2h9gdEuds0tWwI");
+  void toggleFriendSelection(dynamic friend) {
+    setState(() {
+      friend['selected'] = !(friend['selected'] ?? false);
+
+      if (friend['selected']) {
+        friendsArray.add(friend['id']);
+      } else {
+        friendsArray.removeWhere((element) => element == friend['id']);
+      }
+    });
   }
 
   @override
@@ -58,199 +68,231 @@ class CreatePollPageState extends State<CreatePollPage> {
                       key: _formKey,
                       child: ListView(
                         children: [
-                          Row(
-                            children: [
-                              GestureDetector(
-                                onTap: _pickImage,
-                                child: Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface),
-                                  ),
-                                  child: _selectedImage == null
-                                      ? Icon(
-                                          Icons.camera_alt_outlined,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface,
-                                        )
-                                      : Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            image: DecorationImage(
-                                              image: FileImage(_selectedImage!),
-                                              fit: BoxFit.cover,
+                          TextFormField(
+                            controller: _nameController,
+                            decoration: const InputDecoration(
+                                labelText: 'Nom du sondage'),
+                            validator: (value) =>
+                                value!.isEmpty ? 'Ce champ est requis' : null,
+                          ),
+                          const SizedBox(height: 16),
+                          Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                friendsArray.isNotEmpty
+                                                    ? 'Participants (${friendsArray.length})'
+                                                    : 'Participants',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge,
+                                                textAlign: TextAlign.left,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              const Text(
+                                                '*',
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          if (friendsArrayError.isNotEmpty)
+                                            Text(
+                                              friendsArrayError,
+                                              style: const TextStyle(
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.add,
+                                            color: Theme.of(context)
+                                                .scaffoldBackgroundColor),
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              WidgetStateProperty.all<Color>(
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface),
+                                          shape: WidgetStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                             ),
                                           ),
                                         ),
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              Expanded(
-                                child: TextFormField(
-                                  controller: _nameController,
-                                  decoration: const InputDecoration(
-                                      labelText: 'Nom du sondage'),
-                                  validator: (value) => value!.isEmpty
-                                      ? 'Ce champ est requis'
-                                      : null,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
+                                        onPressed: () {
+                                          openFriendsModal();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )),
                           Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Participants',
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
-                                    textAlign: TextAlign.left,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  FutureBuilder(
-                                    future: friends,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return CircularProgressIndicator(); // Affiche un loader en attendant
-                                      } else if (snapshot.hasError) {
-                                        return Text(
-                                            'Erreur: ${snapshot.error}'); // Gère les erreurs
-                                      } else if (!snapshot.hasData) {
-                                        return Text('Aucun ami trouvé');
-                                      }
-                                      final List<dynamic> friendList =
-                                          snapshot.data as List<dynamic>;
-                                      return ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: friendList.length,
-                                        itemBuilder: (context, index) {
-                                          final friend = friendList[index];
-
-                                          return ListTile(
-                                            title: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  friend['selected'] =
-                                                      !(friend['selected'] ??
-                                                          false);
-                                                });
-                                              },
-                                              child: Text(
-                                                friend['email'],
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                selectedRestaurant != null
+                                                    ? selectedRestaurant!.name
+                                                    : 'Lieu',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge,
+                                                textAlign: TextAlign.left,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              const Text(
+                                                '*',
                                                 style: TextStyle(
-                                                  color: (friend['selected'] ??
-                                                          false)
-                                                      ? Colors.red
-                                                      : Colors
-                                                          .black, // Change la couleur selon l'état
+                                                  color: Colors.red,
+                                                  fontSize: 16,
                                                 ),
                                               ),
+                                            ],
+                                          ),
+                                          if (selectedRestaurantError.isNotEmpty)
+                                            Text(
+                                              selectedRestaurantError,
+                                              style: const TextStyle(
+                                                color: Colors.red,
+                                              ),
                                             ),
-                                          );
-                                        },
-                                      );
-
-                                    },
-                                  ),
-                                ],
-                              )),
-                          const SizedBox(height: 20),
-                          Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Les dates',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
-                                        textAlign: TextAlign.left,
+                                        ],
                                       ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, '/polls');
-                                        },
-                                        child: Text(
-                                          'Ajouter',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium,
+                                      IconButton(
+                                        icon: Icon(Icons.add,
+                                            color: Theme.of(context)
+                                                .scaffoldBackgroundColor),
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              WidgetStateProperty.all<Color>(
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface),
+                                          shape: WidgetStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                          ),
                                         ),
+                                        onPressed: () {
+                                          openRestaurantModal();
+                                        },
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    "Vide",
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                    textAlign: TextAlign.left,
-                                  ),
                                 ],
                               )),
-                          const SizedBox(height: 20),
-                          Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Les lieux',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, '/polls');
-                                        },
-                                        child: Text(
-                                          'Ajouter',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    "Vide",
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ],
-                              )),
-                          const SizedBox(height: 20),
+                          // Padding(
+                          //     padding: const EdgeInsets.symmetric(vertical: 8),
+                          //     child: Column(
+                          //       crossAxisAlignment: CrossAxisAlignment.start,
+                          //       children: [
+                          //         Row(
+                          //           mainAxisAlignment:
+                          //               MainAxisAlignment.spaceBetween,
+                          //           children: [
+                          //             Row(
+                          //               children: [
+                          //                 Text(
+                          //                   'Dates',
+                          //                   style: Theme.of(context)
+                          //                       .textTheme
+                          //                       .titleLarge,
+                          //                   textAlign: TextAlign.left,
+                          //                 ),
+                          //                 const SizedBox(width: 8),
+                          //                 const Text(
+                          //                   '*',
+                          //                   style: TextStyle(
+                          //                     color: Colors.red,
+                          //                     fontSize: 16,
+                          //                   ),
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //             IconButton(
+                          //               icon: Icon(Icons.add,
+                          //                   color: Theme.of(context)
+                          //                       .scaffoldBackgroundColor),
+                          //               style: ButtonStyle(
+                          //                 backgroundColor:
+                          //                     WidgetStateProperty.all<Color>(
+                          //                         Theme.of(context)
+                          //                             .colorScheme
+                          //                             .onSurface),
+                          //                 shape: WidgetStateProperty.all<
+                          //                     RoundedRectangleBorder>(
+                          //                   RoundedRectangleBorder(
+                          //                     borderRadius:
+                          //                         BorderRadius.circular(8),
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //               onPressed: () {
+                          //                 openDateModal();
+                          //               },
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ],
+                          //     )),
+                          const SizedBox(height: 16),
                           PrimaryButton(
                             onPressed: () {
+                              friendsArrayError = '';
+                              selectedRestaurantError = '';
+
                               if (!_formKey.currentState!.validate()) return;
-                              pollProvider.createPoll(
-                                  context, _nameController.text.trim());
+
+                              if (friendsArray.isEmpty) {
+                                setState(() {
+                                  friendsArrayError = "Veuillez sélectionner des amis";
+                                });
+                                return;
+                              }
+
+                              if (selectedRestaurant == null) {
+                                setState(() {
+                                  selectedRestaurantError = "Veuillez sélectionner un restaurant";
+                                });
+
+                                return;
+                              }
+
+                              pollProvider.createPoll(context,
+                                  _nameController.text.trim(), friendsArray, selectedRestaurant!.id);
                             },
                             label: "Créer le sondage",
                           ),
@@ -280,5 +322,132 @@ class CreatePollPageState extends State<CreatePollPage> {
             },
           ),
         ));
+  }
+
+  void openFriendsModal() async {
+    // Ouvre la modal et attend la fermeture
+    await showModalBottomSheet<List<int>>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return BottomNativeModal(
+          content: Column(
+            children: [
+              FriendsList(
+                friendsFuture: fetchFriends(),
+                selectedFriends: friendsArray,
+                onFriendsSelected: (selected) {
+                  setState(() {
+                    friendsArray = selected;
+                  });
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void openDateModal() async {
+    // Ouvre la modal et attend la fermeture
+    await showModalBottomSheet<List<int>>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return BottomNativeModal(
+          content: Column(
+            children: [
+              FormField(
+                builder: (FormFieldState state) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Date',
+                          ),
+                          onTap: () {
+                            showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(2025, 12, 31),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Heure',
+                          ),
+                          onTap: () {
+                            showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void openRestaurantModal() async {
+    final restaurantProvider =
+        Provider.of<RestaurantProvider>(context, listen: false);
+    final likedRestaurants = restaurantProvider.likedRestaurants;
+
+    // Ouvre la modal et attend la fermeture
+    List<Restaurant>? setSelectedRestaurant;
+    setSelectedRestaurant = await showModalBottomSheet<List<Restaurant>>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return BottomNativeModal(
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                for (var restaurant in likedRestaurants)
+                  ListTile(
+                    leading: SizedBox(
+                      width: 70,
+                      height: 70,
+                      child: ImageDisplayer(restaurant: restaurant),
+                    ),
+                    title: Text(restaurant.name),
+                    onTap: () {
+                      Navigator.of(context).pop([restaurant]);
+                    },
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    if (setSelectedRestaurant != null) {
+      setState(() {
+        selectedRestaurant = setSelectedRestaurant![0];
+      });
+    }
   }
 }

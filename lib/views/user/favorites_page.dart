@@ -44,12 +44,6 @@ class FavoritesPage extends StatelessWidget {
       categories.add(likedCategory);
     }
 
-    categories.add(Category(
-        title: "Favoris", subtitle: "Fonctionnalité à venir", restaurants: []));
-
-    categories.add(Category(
-        title: "Notés", subtitle: "Fonctionnalité à venir", restaurants: []));
-
     return SafeArea(
       child: Padding(
           padding: const EdgeInsets.all(8.0),

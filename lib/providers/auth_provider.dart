@@ -7,6 +7,7 @@ class AuthProvider with ChangeNotifier {
 
   bool _isAuthenticated = false;
   bool _isManager = false;
+  int _userId = 0;
   String _userName = '';
   String _userEmail = '';
   int _currentFriendCount = 0;
@@ -15,6 +16,7 @@ class AuthProvider with ChangeNotifier {
 
   bool get isAuthenticated => _isAuthenticated;
   bool get isManager => _isManager;
+  int get userId => _userId;
   String get userName => _userName;
   String get userEmail => _userEmail;
   String? get token => _token;
@@ -28,6 +30,7 @@ class AuthProvider with ChangeNotifier {
   void _resetProvider() {
     _isAuthenticated = false;
     _isManager = false;
+    _userId = 0;
     _userName = '';
     _userEmail = '';
     _currentFriendCount = 0;
@@ -37,6 +40,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> _updateUserFromResponse(Map<String, dynamic> response) async {
     _isAuthenticated = true;
+    _userId = response['id'] ?? 0;
     _userName = response['name'] ?? '';
     _userEmail = response['email'] ?? '';
     _currentFriendCount = response['currentFriendCount'] ?? 0;

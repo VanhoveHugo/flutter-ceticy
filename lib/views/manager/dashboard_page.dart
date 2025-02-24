@@ -10,12 +10,6 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final restaurants = Provider.of<RestaurantProvider>(context).restaurants;
 
-    if (restaurants.isEmpty) {
-      return const Center(
-        child: Text('Aucun restaurant disponible'),
-      );
-    }
-
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(

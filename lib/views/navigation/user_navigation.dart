@@ -160,7 +160,7 @@ class UserNavigationState extends State<UserNavigation> {
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
                   index == 0
-                      ? AppAsset.getSvg("grid")
+                      ? AppAsset.getSvg("Grid")
                       : AppAsset.getSvg("grid_outline"),
                   width: 30,
                   height: 30,
@@ -173,12 +173,12 @@ class UserNavigationState extends State<UserNavigation> {
                     BlendMode.srcIn,
                   ),
                 ),
-                label: 'Découvrir',
+                label: 'Sondage',
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
                   index == 1
-                      ? AppAsset.getSvg("cards")
+                      ? AppAsset.getSvg("Cards")
                       : AppAsset.getSvg("cards_outline"),
                   width: 30,
                   height: 30,
@@ -196,7 +196,7 @@ class UserNavigationState extends State<UserNavigation> {
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
                   index == 2
-                      ? AppAsset.getSvg("heart")
+                      ? AppAsset.getSvg("Heart")
                       : AppAsset.getSvg("heart_outline"),
                   width: 30,
                   height: 30,
@@ -214,7 +214,7 @@ class UserNavigationState extends State<UserNavigation> {
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
                   index == 3
-                      ? AppAsset.getSvg("user")
+                      ? AppAsset.getSvg("User")
                       : AppAsset.getSvg("user_outline"),
                   width: 30,
                   height: 30,
