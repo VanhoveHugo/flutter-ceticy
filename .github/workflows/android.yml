@@ -19,12 +19,11 @@ jobs:
 
       - run: flutter pub get
 
-      - name: Set Java 11 environment
-        run: |
-          sudo apt update
-          sudo apt install openjdk-11-jdk
-          echo "JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" >> $GITHUB_ENV
-          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
+      - name: Set Java 17 environment
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'openjdk'
 
       - run: flutter build apk --release
 
