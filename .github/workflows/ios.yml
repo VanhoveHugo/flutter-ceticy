@@ -5,7 +5,6 @@ on:
       - main
 permissions:
   contents: write
-  workflows: write
 jobs:
   build-ios:
     name: 🎉 Build iOS Release
@@ -39,10 +38,7 @@ jobs:
         run: |
             git fetch --tags
             TAG="v${{ env.VERSION }}"
-            if git rev-parse "$TAG" >/dev/null 2>&1; then
-              echo "Tag $TAG already exists."
-            else
-              echo "Tag $TAG does not exist, creating and pushing it."
+            if ! git rev-parse "$TAG" >/dev/null 2>&1; then
               git tag "$TAG"
               git push origin "$TAG"
             fi
