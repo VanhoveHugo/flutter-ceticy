@@ -19,30 +19,50 @@ jobs:
 
       - run: flutter pub get
 
+      - name: Set Java 17 environment
+        run: |
+          sudo apt update
+          sudo apt install openjdk-17-jdk
+          echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
+          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
+
       - run: flutter build apk --release
 
       - run: flutter build appbundle --release
 
-      - name: Create Git Tag
+      - name: Extract version from pubspec.yaml
+        run: echo "VERSION=$(grep 'version: ' pubspec.yaml | cut -d ' ' -f2)" >> $GITHUB_ENV
+
+      - name: Fetch tags and check if the tag exists
         run: |
-          TAG_NAME="release_${GITHUB_SHA::8}"  # Crée un tag court basé sur le hash du commit
-          git tag $TAG_NAME
-          git push origin $TAG_NAME
+            git fetch --tags
+            TAG="v${{ env.VERSION }}"
+            if git rev-parse "$TAG" >/dev/null 2>&1; then
+              echo "Tag $TAG already exists."
+            else
+              echo "Tag $TAG does not exist, creating and pushing it."
+              git tag "$TAG"
+              git push origin "$TAG"
+            fi
 
       - name: Upload APK to Release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/app/outputs/flutter-apk/app-release.apk
-          tag_name: release_${GITHUB_SHA::8}
+          tag_name: v${{ env.VERSION }}
           overwrite: true
-          body: "Automated release for commit ${GITHUB_SHA::8}"
+          body: "🚀 APK ${{ env.VERSION }}"
+          name: Ceticy-v${{ env.VERSION }}.apk
+          asset_content_type: application/vnd.android.package-archive
 
       - name: Upload AAB to Release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/app/outputs/bundle/release/app-release.aab
-          tag_name: release_${GITHUB_SHA::8}
+          tag_name: v${{ env.VERSION }}
           overwrite: true
-          body: "Automated release for commit ${GITHUB_SHA::8}"
+          body: "🚀 AAB ${{ env.VERSION }}"
+          name: Ceticy-v${{ env.VERSION }}.aab
+          asset_content_type: application/octet-stream
