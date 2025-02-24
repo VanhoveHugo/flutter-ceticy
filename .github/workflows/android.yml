@@ -32,7 +32,7 @@ jobs:
 
       - run: flutter build apk --release &
 
-      - run: flutter build appbundle --release
+      - run: flutter build appbundle --release &
 
       - name: Extract version from pubspec.yaml
         run: |
