@@ -25,7 +25,12 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - run: flutter build apk --release
+      - name: Set JAVA_HOME for Gradle
+        run: |
+          echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))" >> $GITHUB_ENV
+          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
+
+      - run: flutter build apk --release &
 
       - run: flutter build appbundle --release
 
