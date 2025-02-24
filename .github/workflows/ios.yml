@@ -29,7 +29,10 @@ jobs:
         working-directory: .
 
       - name: Extract version from pubspec.yaml
-        run: echo "VERSION=$(grep 'version: ' pubspec.yaml | cut -d ' ' -f2)" >> $GITHUB_ENV
+        run: |
+          VERSION=$(grep 'version: ' pubspec.yaml | cut -d ' ' -f2)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Version extracted: $VERSION"
 
       - name: Fetch tags and check if the tag exists
         run: |
