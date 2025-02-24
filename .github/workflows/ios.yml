@@ -28,17 +28,28 @@ jobs:
           zip -r9 CeticyIpaExport.ipa Payload
         working-directory: .
 
-      - name: Create Git Tag
+      - name: Extract version from pubspec.yaml
+        run: echo "VERSION=$(grep 'version: ' pubspec.yaml | cut -d ' ' -f2)" >> $GITHUB_ENV
+
+      - name: Fetch tags and check if the tag exists
         run: |
-          TAG_NAME="release_${GITHUB_SHA::8}"  # Crée un tag court basé sur le hash du commit
-          git tag $TAG_NAME
-          git push origin $TAG_NAME
+            git fetch --tags
+            TAG="v${{ env.VERSION }}"
+            if git rev-parse "$TAG" >/dev/null 2>&1; then
+              echo "Tag $TAG already exists."
+            else
+              echo "Tag $TAG does not exist, creating and pushing it."
+              git tag "$TAG"
+              git push origin "$TAG"
+            fi
 
       - name: Upload IPA to Release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/ios/iphoneos/CeticyIpaExport.ipa
-          tag_name: release_${GITHUB_SHA::8}
+          tag_name: v${{ env.VERSION }}
           overwrite: true
-          body: "Automated release for commit ${GITHUB_SHA::8}"
+          body: "🚀 IPA ${{ env.VERSION }}"
+          name: Ceticy-v${{ env.VERSION }}.ipa
+          asset_content_type: application/octet-stream
