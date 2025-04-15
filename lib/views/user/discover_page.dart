@@ -4,6 +4,7 @@ import 'package:ceticy/providers/swipe_provider.dart';
 import 'package:ceticy/views/user/widgets/swipe/swipe_buttons.dart';
 import 'package:ceticy/views/user/widgets/swipe/swipe_card.dart';
 import 'package:ceticy/views/user/widgets/swipe/swipe_description.dart';
+import 'package:ceticy/views/user/widgets/swipe/swipe_pub.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
     final List<Restaurant> restaurant =
         Provider.of<RestaurantProvider>(context).restaurants;
     var swipeProvider = Provider.of<SwipeProvider>(context);
+    var restaurantProvider = Provider.of<RestaurantProvider>(context);
 
     if (restaurant.isEmpty) {
       return Center(child: CircularProgressIndicator());
@@ -43,15 +45,20 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     height: swipeProvider.isDescriptionVisible == true
                         ? 66
                         : MediaQuery.of(context).size.height,
-                    child: SwipeCard(
-                        restaurant: restaurant[safeIndex])),
+                    child: SwipeCard(restaurant: restaurant[safeIndex])),
                 if (swipeProvider.isDescriptionVisible)
-                  SwipeDescription(
-                      restaurant: restaurant[safeIndex]),
+                  SwipeDescription(restaurant: restaurant[safeIndex]),
               ],
             ),
           ),
-        SwipeButtons(restaurantId: restaurant[safeIndex].id),
+        if (restaurantProvider.showAd)
+          SwipePub(
+            onClose: () {
+              restaurantProvider.hideAd();
+            },
+          ),
+        if (!restaurantProvider.showAd)
+          SwipeButtons(restaurantId: restaurant[safeIndex].id),
       ],
     ));
   }
