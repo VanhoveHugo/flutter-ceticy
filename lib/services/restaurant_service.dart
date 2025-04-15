@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' as io;
 import 'package:ceticy/core/app_constants.dart';
 import 'package:ceticy/models/api_exception.dart';
 import 'package:ceticy/models/restaurant_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
@@ -23,7 +24,7 @@ class RestaurantService {
 
   static Future<Restaurant> fetchRestaurantById(String token, int id) async {
     final response = await http.get(
-      Uri.parse('$apiBaseUrl/restaurants/$id'),
+      Uri.parse('$apiBaseUrl/restaurants/one/$id'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -59,17 +60,34 @@ class RestaurantService {
       int averagePrice,
       int averageService,
       String phoneNumber,
-      File thumbnail) async {
+      dynamic thumbnail) async {
     try {
       var uri = Uri.parse('$apiBaseUrl/restaurants');
       var request = http.MultipartRequest('POST', uri)
         ..headers['Authorization'] = 'Bearer $token';
 
-      request.files.add(await http.MultipartFile.fromPath(
-        'thumbnail',
-        thumbnail.path,
-        contentType: MediaType('image', 'jpeg'),
-      ));
+      if (kIsWeb) {
+        if (thumbnail is Uint8List) {
+          request.files.add(http.MultipartFile.fromBytes(
+            'thumbnail',
+            thumbnail,
+            filename: "thumbnail.jpg", // 🔥 Ajout d'un nom correct
+            contentType: MediaType('image', 'jpeg'),
+          ));
+        } else {
+          throw Exception("L'image doit être un Uint8List sur le Web.");
+        }
+      } else {
+        if (thumbnail is io.File) {
+          request.files.add(await http.MultipartFile.fromPath(
+            'thumbnail',
+            thumbnail.path,
+            contentType: MediaType('image', 'jpeg'),
+          ));
+        } else {
+          throw Exception("L'image doit être un File sur Mobile/Desktop.");
+        }
+      }
 
       request.fields['name'] = name;
       request.fields['description'] = description;
@@ -92,14 +110,14 @@ class RestaurantService {
       if (e is ApiException) {
         rethrow;
       } else {
-        throw Exception("Erreur réseau ou autre: $e");
+        throw Exception(e.toString());
       }
     }
   }
 
   static Future<List<Restaurant>> fetchManagerRestaurants(String token) async {
     final response =
-        await http.get(Uri.parse('$apiBaseUrl/restaurants/'), headers: {
+        await http.get(Uri.parse('$apiBaseUrl/restaurants/manager'), headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     });

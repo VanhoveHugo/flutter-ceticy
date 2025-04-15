@@ -5,6 +5,7 @@ class Restaurant {
   final int? averagePrice;
   final int? averageService;
   final String? phoneNumber;
+  final String? address;
 
   final List<String>? photos;
 
@@ -15,6 +16,7 @@ class Restaurant {
     this.averagePrice,
     this.averageService,
     this.phoneNumber,
+    this.address,
     this.photos,
   );
 
@@ -26,6 +28,7 @@ class Restaurant {
       json['averagePrice'],
       json['averageService'],
       json['phoneNumber'],
+      json['address'] ,
       json['photos'] != null
           ? (json['photos'] as List)
               .map((photo) => photo['url'] as String)

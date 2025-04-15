@@ -1,7 +1,8 @@
 import 'package:ceticy/core/app_asset.dart';
+import 'package:ceticy/core/widgets/buttons/logout_button.dart';
 import 'package:ceticy/core/widgets/modals/subscription_modal.dart';
 import 'package:ceticy/providers/auth_provider.dart';
-import 'package:ceticy/views/user/widgets/pofile/stats_display.dart';
+import 'package:ceticy/views/user/widgets/profil/stats_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +48,12 @@ class ProfilePage extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    width: 1,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.5)),
                 color: Theme.of(context).colorScheme.surface),
             child: TextButton(
               style: TextButton.styleFrom(
@@ -54,7 +61,9 @@ class ProfilePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/preferences');
+              },
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
@@ -79,7 +88,9 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).colorScheme.onSurface),
+                    Icon(Icons.arrow_forward_ios,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.onSurface),
                   ],
                 ),
               ),
@@ -98,6 +109,8 @@ class ProfilePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Container(
+                      margin: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.primary,
@@ -168,41 +181,27 @@ class ProfilePage extends StatelessWidget {
                       ))
                 ],
               )),
-          // const SizedBox(height: 24),
-          // Padding(
-          //     padding: const EdgeInsets.symmetric(vertical: 8),
-          //     child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: [
-          //         Text(
-          //           'Récompenses',
-          //           style: Theme.of(context).textTheme.titleLarge,
-          //           textAlign: TextAlign.left,
-          //         ),
-          //         const SizedBox(height: 16),
-          //         SizedBox(
-          //           height: 50,
-          //           child: ListView.builder(
-          //             scrollDirection: Axis.horizontal,
-          //             itemCount: 10,
-          //             itemBuilder: (context, index) {
-          //               return Padding(
-          //                 padding: const EdgeInsets.only(right: 8),
-          //                 child: SvgPicture.asset(
-          //                     AppAsset.getSvg("flash_outline"),
-          //                     width: 50,
-          //                     height: 50,
-          //                     colorFilter: ColorFilter.mode(
-          //                       Theme.of(context).colorScheme.onSurface,
-          //                       BlendMode.srcIn,
-          //                     ),
-          //                   ),
-          //               );
-          //             },
-          //           ),
-          //         )
-          //       ],
-          //     )),
+          const SizedBox(height: 24),
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Récompenses',
+                    style: Theme.of(context).textTheme.titleLarge,
+                    textAlign: TextAlign.left,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Vous n\'avez pas encore de récompenses',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              )),
+          const SizedBox(height: 24),
+          LogoutButton(),
+          const SizedBox(height: 24),
         ],
       ),
     )));

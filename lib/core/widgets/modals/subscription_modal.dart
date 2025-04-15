@@ -17,10 +17,11 @@ void showSubscriptionModal(BuildContext context) {
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (context, setState) {
-          return Padding(
+          return Container(
+            height: MediaQuery.of(context).size.height,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 16),
                 Row(
@@ -169,7 +170,7 @@ void showSubscriptionModal(BuildContext context) {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: () {
                     String offerMessage = selectedOffer == 1 ? '1 mois' : selectedOffer == 2 ? '3 mois' : '6 mois';
@@ -187,7 +188,6 @@ void showSubscriptionModal(BuildContext context) {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                const SizedBox(height: 16),
               ],
             ),
           );

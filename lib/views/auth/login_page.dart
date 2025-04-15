@@ -1,4 +1,5 @@
 import 'package:ceticy/core/app_asset.dart';
+import 'package:ceticy/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ceticy/providers/auth_provider.dart';
@@ -16,6 +17,7 @@ class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _passwordObscure = true;
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -27,22 +29,17 @@ class LoginPageState extends State<LoginPage> {
       _errorMessage = null;
     });
 
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
 
     try {
-      await authProvider.login(
-          _emailController.text, _passwordController.text, selectedScope);
-
-      if (authProvider.isAuthenticated && mounted) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/', (Route<dynamic> route) => false);
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _errorMessage = 'Login failed, please try again.';
-        });
-      }
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      authProvider.login(context, _emailController.text,
+          _passwordController.text, selectedScope);
     } finally {
       if (mounted) {
         setState(() {
@@ -54,6 +51,8 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Consumer<AuthProvider>(
       builder: (context, authProvider, _) {
         return Scaffold(
@@ -78,15 +77,17 @@ class LoginPageState extends State<LoginPage> {
                       Form(
                         key: _formKey,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 20),
                             TextFormField(
                               controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
                               decoration:
-                                  const InputDecoration(labelText: 'Email'),
+                                  InputDecoration(labelText: localizations.email),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Veuillez entrer un email';
+                                  return localizations.pleaseEnterEmail;
                                 }
                                 return null;
                               },
@@ -94,25 +95,46 @@ class LoginPageState extends State<LoginPage> {
                             const SizedBox(height: 20),
                             TextFormField(
                               controller: _passwordController,
-                              obscureText: true,
-                              decoration:
-                                  const InputDecoration(labelText: 'Password'),
+                              obscureText: _passwordObscure,
+                              decoration: InputDecoration(
+                                labelText: localizations.password,
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _passwordObscure
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordObscure = !_passwordObscure;
+                                    });
+                                  },
+                                ),
+                              ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Veuillez entrer un mot de passe';
+                                  return localizations.pleaseEnterPassword;
                                 }
                                 return null;
                               },
                             ),
-                            const SizedBox(height: 100),
+                            const SizedBox(height: 20),
+                            Text(
+                              authProvider.errorMessage,
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                            const SizedBox(height: 40),
                             PrimaryButton(
-                              label: 'Je me connecte',
+                              label: localizations.login,
                               onPressed: () => _submit('user'),
                             ),
                             const SizedBox(height: 20),
                             SecondaryButton(
-                              label: 'Je suis restaurateur',
-                              onPressed: () => _submit('manager'),
+                              label: localizations.iAmRestaurant,
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, '/onboarding/manager');
+                              },
                             ),
                           ],
                         ),
@@ -120,9 +142,10 @@ class LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 20),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/register');
+                          authProvider.resetErrorMessage();
+                          Navigator.pushNamed(context, '/register');
                         },
-                        child: const Text('Je n\'ai pas de compte'),
+                        child: Text(localizations.noAccount),
                       ),
                     ],
                   ),
