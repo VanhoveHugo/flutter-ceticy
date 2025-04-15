@@ -16,11 +16,26 @@ class PollsDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int pollId = poll.options[0].restaurantId;
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
     String token = authProvider.token!;
 
+    // Vérifier si le sondage a des options
+    if (poll.options.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(poll.name),
+          actions: [
+            if (authProvider.userId == poll.creatorId)
+              _popupMenu(context)
+          ],
+        ),
+        body: const Center(
+          child: Text("Ce sondage n'a pas de restaurant associé"),
+        ),
+      );
+    }
+
+    int pollId = poll.options[0].restaurantId;
     Future<Restaurant> restaurant =
         RestaurantService.fetchRestaurantById(token, pollId);
 
@@ -28,61 +43,8 @@ class PollsDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(poll.name),
         actions: [
-          authProvider.userId == poll.creatorId
-              ? PopupMenuButton<int>(
-                  icon: const Icon(Icons.more_vert),
-                  offset: const Offset(0, 50),
-                  onSelected: (value) {},
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 1,
-                      child: Row(
-                        children: [
-                          Icon(Icons.delete,
-                              color: Theme.of(context).colorScheme.error),
-                          const SizedBox(width: 8),
-                          Text("Supprimer"),
-                        ],
-                      ),
-                      onTap: () {
-                        Future.delayed(Duration.zero, () {
-                          if (!context.mounted) {
-                            return;
-                          }
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text("Supprimer le poll"),
-                              content: Text(
-                                  "Voulez-vous vraiment supprimer ce poll ?"),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: Text("Annuler"),
-                                ),
-                                Consumer<PollProvider>(
-                                  builder: (context, pollProvider, child) {
-                                    return TextButton(
-                                      onPressed: () {
-                                        pollProvider.deletePoll(
-                                            context, poll.id);
-
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text("Supprimer",
-                                          style: TextStyle(color: Colors.red)),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        });
-                      },
-                    ),
-                  ],
-                )
-              : const SizedBox(),
+          if (authProvider.userId == poll.creatorId)
+            _popupMenu(context)
         ],
       ),
       body: Padding(
@@ -108,11 +70,12 @@ class PollsDetailsPage extends StatelessWidget {
                           width: 2,
                         ),
                       ),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Row(
+                          children: [
+                            // Image
+                            Container(
                               width: 70,
                               height: 70,
                               decoration: BoxDecoration(
@@ -124,86 +87,102 @@ class PollsDetailsPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                restaurant.name,
-                                style: Theme.of(context).textTheme.titleLarge,
+                            const SizedBox(width: 8),
+                            // Text content
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    restaurant.name,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "Restaurant",
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                "Restaurant",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }
                 }
-
                 return CircularProgressIndicator();
               },
               future: restaurant,
             ),
+            const SizedBox(height: 16),
             Text(
               'Votes',
               style: Theme.of(context).textTheme.titleMedium,
               textAlign: TextAlign.left,
             ),
-            SizedBox(
-              height: 44,
-              child: Stack(
-                alignment: Alignment.center, // Centre les images
-                children: poll.participants.asMap().entries.map((entry) {
-                  int index = entry.key;
+            if (poll.participants.isEmpty)
+              const Text("Aucun vote pour le moment"),
+            const SizedBox(height: 16),
+            YesNo(initialVote: null),
+            const SizedBox(height: 16),
+            PrimaryButton(label: "Voter", onPressed: () {}),
+          ],
+        ),
+      ),
+    );
+  }
 
-                  return Positioned(
-                    left: index * 30.0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.surface,
-                          width: 2,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.25),
-                            blurRadius: 2,
-                            spreadRadius: 1,
-                            offset: Offset(0, 2),
+  // Popup menu
+  Widget _popupMenu(BuildContext context) {
+    return PopupMenuButton<int>(
+              icon: const Icon(Icons.more_vert),
+              offset: const Offset(0, 50),
+              onSelected: (value) {},
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 1,
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete,
+                          color: Theme.of(context).colorScheme.error),
+                      const SizedBox(width: 8),
+                      Text("Supprimer"),
+                    ],
+                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text("Supprimer le sondage"),
+                        content:
+                            Text("Êtes-vous sûr de vouloir continuer ?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text("Annuler"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              PollProvider pollProvider =
+                                  Provider.of<PollProvider>(context,
+                                      listen: false);
+                              pollProvider.deletePoll(context, poll.id);
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, "/home", (route) => false);
+                            },
+                            child: Text("Supprimer",
+                                style: TextStyle(color: Colors.red)),
                           ),
                         ],
                       ),
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundImage: AssetImage(AppAsset.placeholder),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-
-            YesNo(initialVote: null),
-
-            // Text(
-            //   'Choix de la date',
-            //   style: Theme.of(context).textTheme.titleMedium,
-            //   textAlign: TextAlign.left,
-            // ),
-
-            // make button Oui / non with checkbox inrow
-            const SizedBox(height: 16),
-            PrimaryButton(label: "Voter", onPressed: () {
-            }),
-            ],
-          ),
-      ),
+                    );
+                  },
+                ),
+      ],
     );
   }
 }

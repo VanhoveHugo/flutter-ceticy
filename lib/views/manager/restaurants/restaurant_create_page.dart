@@ -1,11 +1,14 @@
-import 'dart:io';
-import 'dart:typed_data';
+import 'dart:io' as io;
+import 'package:flutter/foundation.dart';
 import 'package:ceticy/core/widgets/buttons/primary_button.dart';
 import 'package:ceticy/core/widgets/form/choice_input.dart';
 import 'package:ceticy/providers/restaurant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+// import 'dart:html' as html;
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class RestaurantsCreatePage extends StatefulWidget {
   const RestaurantsCreatePage({super.key});
@@ -26,21 +29,61 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
 
   final TextEditingController _phoneNumberController = TextEditingController();
 
-  File? _selectedImage;
+  io.File? _selectedImage;
   bool _isImageValid = true;
   Uint8List? _webImage;
 
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  Future<Uint8List> convertMultipartFileToUint8List(
+      http.MultipartFile file) async {
+    final stream = file.finalize();
+    final bytes = await http.ByteStream(stream).toBytes();
+    return bytes;
+  }
 
-    if (pickedFile != null) {
-      final bytes = await pickedFile.readAsBytes(); // Lire en Uint8List
-      setState(() {
-        _webImage = bytes;
-        _selectedImage = File(pickedFile.path);
-        _isImageValid = true;
-      });
+  Future<void> _pickImage() async {
+    if (kIsWeb) {
+      // html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
+      // uploadInput.accept = 'image/*';
+      // uploadInput.click();
+
+      // uploadInput.onChange.listen((event) {
+      //   final file = uploadInput.files!.first;
+      //   final reader = html.FileReader();
+
+      //   reader.readAsArrayBuffer(file);
+      //   reader.onLoadEnd.listen((e) {
+      //     Uint8List fileBytes = reader.result as Uint8List;
+
+      //     setState(() {
+      //       _webImage = fileBytes;
+      //       _selectedImage = null;
+      //       _isImageValid = true;
+      //     });
+      //   });
+      // });
+    } else {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        final bytes = await pickedFile.readAsBytes();
+
+        setState(() {
+          _webImage = bytes;
+          _selectedImage = io.File(pickedFile.path);
+          _isImageValid = true;
+        });
+      }
+    }
+  }
+
+  Widget _displayImage() {
+    if (kIsWeb && _webImage != null) {
+      return Image.memory(_webImage!, fit: BoxFit.cover);
+    } else if (_selectedImage != null) {
+      return Image.file(_selectedImage!, fit: BoxFit.cover);
+    } else {
+      return const Center(child: Text("Aucune image sélectionnée"));
     }
   }
 
@@ -55,7 +98,7 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
             builder: (context, pollProvider, child) {
               return Stack(
                 children: [
-                  Padding(
+                  Container(
                     padding: const EdgeInsets.all(16.0),
                     child: Form(
                       key: _formKey,
@@ -64,28 +107,14 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
                           GestureDetector(
                             onTap: _pickImage,
                             child: Container(
-                              height: 150,
+                              height: 136,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface),
+                                    color: Theme.of(context).colorScheme.secondary,
+                                )
                               ),
-                              child: _selectedImage == null
-                                  ? const Center(
-                                      child: Text('Sélectionner une image'))
-                                  : Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        image: DecorationImage(
-                                          image: _webImage != null
-                                              ? MemoryImage(_webImage!) as ImageProvider<Object>
-                                              : FileImage(_selectedImage!) as ImageProvider<Object>,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
+                              child: _displayImage(),
                             ),
                           ),
                           if (!_isImageValid)
@@ -96,7 +125,7 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
                                 style: TextStyle(color: Colors.red),
                               ),
                             ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
                           TextFormField(
                             controller: _nameController,
                             decoration: const InputDecoration(
@@ -104,7 +133,7 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
                             validator: (value) =>
                                 value!.isEmpty ? 'Ce champ est requis' : null,
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
                           TextFormField(
                             controller: _descriptionController,
                             decoration: const InputDecoration(
@@ -112,10 +141,10 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
                             validator: (value) =>
                                 value!.isEmpty ? 'Ce champ est requis' : null,
                           ),
-                          const SizedBox(height: 20),
-
+                          const SizedBox(height: 24),
                           const Text("Prix moyen par personne"),
-                          Row(
+                          const SizedBox(height: 8),
+                          Wrap(
                             children: [
                               ChoiceInput(
                                 label: '- 15€',
@@ -163,10 +192,10 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
                                     TextStyle(color: Colors.red, fontSize: 12),
                               ),
                             ),
-
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
                           const Text("Temps d'attente moyen"),
-                          Row(
+                          const SizedBox(height: 8),
+                          Wrap(
                             children: [
                               ChoiceInput(
                                 label: '- 30min',
@@ -214,8 +243,7 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
                                     TextStyle(color: Colors.red, fontSize: 12),
                               ),
                             ),
-
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
                           TextFormField(
                             controller: _phoneNumberController,
                             decoration: const InputDecoration(
@@ -223,32 +251,42 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
                             validator: (value) =>
                                 value!.isEmpty ? 'Ce champ est requis' : null,
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
                           PrimaryButton(
-                            onPressed: () {
-                              if (_selectedImage == null) {
-                                setState(() {
-                                  _isImageValid = false;
-                                });
+                            onPressed: () async {
+                              if (_selectedImage == null && _webImage == null) {
+                                _isImageValid = false;
                               }
 
                               if (_averagePriceValue == 0) {
-                                setState(() {
-                                  _isPriceValid = false;
-                                });
+                                _isPriceValid = false;
                               }
 
                               if (_averageServiceValue == 0) {
-                                setState(() {
-                                  _isServiceValid = false;
-                                });
+                                _isServiceValid = false;
                               }
 
                               if (!_formKey.currentState!.validate() ||
-                                  _averagePriceValue == 0 ||
-                                  _averageServiceValue == 0 ||
-                                  !_isImageValid) {
-                                return;
+                                  !_isImageValid ||
+                                  !_isPriceValid ||
+                                  !_isServiceValid) {
+                                return setState(() {});
+                              }
+
+                              dynamic imageToUpload;
+                              if (kIsWeb) {
+                                imageToUpload = http.MultipartFile.fromBytes(
+                                  'thumbnail',
+                                  _webImage!,
+                                  filename: 'thumbnail.png',
+                                  contentType: MediaType('image', 'png'),
+                                );
+                                Uint8List imageBytes =
+                                    await convertMultipartFileToUint8List(
+                                        imageToUpload);
+                                imageToUpload = imageBytes;
+                              } else {
+                                imageToUpload = io.File(_selectedImage!.path);
                               }
 
                               pollProvider.createRestaurant(
@@ -258,7 +296,7 @@ class RestaurantsCreatePageState extends State<RestaurantsCreatePage> {
                                   _averagePriceValue,
                                   _averageServiceValue,
                                   _phoneNumberController.text.trim(),
-                                  _selectedImage!);
+                                  imageToUpload);
                             },
                             label: "Créer le restaurant",
                           ),

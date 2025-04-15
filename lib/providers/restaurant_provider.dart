@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:ceticy/models/api_exception.dart';
 import 'package:ceticy/models/restaurant_model.dart';
 import 'package:ceticy/providers/auth_provider.dart';
@@ -8,28 +7,50 @@ import 'package:ceticy/services/swipe_service.dart';
 
 class RestaurantProvider with ChangeNotifier {
   late final AuthProvider _authProvider;
+
   bool _isLoading = false;
   String _errorMessage = '';
-
-  bool get isLoading => _isLoading;
-  String get errorMessage => _errorMessage;
-
   List<Restaurant> _restaurants = [];
   List<Restaurant> _swipedRestaurants = [];
   List<Restaurant> _likedRestaurants = [];
+  Restaurant? _currentRestaurantManager;
 
-  List<Restaurant> get restaurants => _restaurants;
-  List<Restaurant> get swipedRestaurants => _swipedRestaurants;
-  List<Restaurant> get likedRestaurants => _likedRestaurants;
+  // Getters
+  bool get isLoading => _isLoading;
+  String get errorMessage => _errorMessage;
+  List<Restaurant> get restaurants => List.unmodifiable(_restaurants);
+  List<Restaurant> get swipedRestaurants => List.unmodifiable(_swipedRestaurants);
+  List<Restaurant> get likedRestaurants => List.unmodifiable(_likedRestaurants);
+  Restaurant? get currentRestaurantManager => _currentRestaurantManager;
 
-  void _startFunction() {
-    _isLoading = true;
-    _errorMessage = '';
-    notifyListeners();
+  // Setters
+  void setCurrentRestaurantManager(Restaurant restaurant) {
+    if (_currentRestaurantManager?.id != restaurant.id) {
+      _currentRestaurantManager = restaurant;
+      notifyListeners();
+    }
   }
 
-  void _resetProvider() {
+  void _startLoading() {
+    if (!_isLoading) {
+      _isLoading = true;
+      _errorMessage = '';
+      notifyListeners();
+    }
+  }
+
+  void _stopLoading() {
+    if (_isLoading) {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void _resetState() {
     _restaurants = [];
+    _swipedRestaurants = [];
+    _likedRestaurants = [];
+    _currentRestaurantManager = null;
     notifyListeners();
   }
 
@@ -37,7 +58,7 @@ class RestaurantProvider with ChangeNotifier {
     if (_authProvider.isAuthenticated) {
       initialize(_authProvider);
     } else {
-      _resetProvider();
+      _resetState();
     }
   }
 
@@ -57,73 +78,101 @@ class RestaurantProvider with ChangeNotifier {
   }
 
   Future<void> fetchManagerRestaurants() async {
-    _isLoading = true;
-    notifyListeners();
+    if (_isLoading) return;
 
     try {
-      var token = _authProvider.token;
+      _startLoading();
+      final token = _authProvider.token;
+      if (token == null) throw Exception("Token utilisateur manquant.");
 
-      final restaurants =
-          await RestaurantService.fetchManagerRestaurants(token!);
+      final restaurants = await RestaurantService.fetchManagerRestaurants(token);
       _restaurants = restaurants;
+      notifyListeners();
     } catch (error) {
       _restaurants = [];
-    } finally {
-      _isLoading = false;
+      _errorMessage = error.toString();
       notifyListeners();
+    } finally {
+      _stopLoading();
     }
   }
 
   Future<void> fetchRandomRestaurants() async {
-    _isLoading = true;
-    notifyListeners();
+    if (_isLoading) return;
 
     try {
-      var token = _authProvider.token;
-      final restaurants = await RestaurantService.fetchRestaurants(token!);
-      _restaurants = restaurants;
+      _startLoading();
+      final token = _authProvider.token;
+      if (token == null) throw Exception("Token utilisateur manquant.");
+
+      final newRestaurants = await RestaurantService.fetchRestaurants(token);
+      if (_restaurants.isEmpty) {
+        _restaurants = newRestaurants;
+      } else {
+        _restaurants.addAll(newRestaurants);
+      }
+      notifyListeners();
     } catch (error) {
       _restaurants = [];
-    } finally {
-      _isLoading = false;
+      _errorMessage = error.toString();
       notifyListeners();
+    } finally {
+      _stopLoading();
     }
   }
 
   Future<void> fetchLikedRestaurants() async {
-    _isLoading = true;
-    notifyListeners();
+    if (_isLoading) return;
 
     try {
-      var token = _authProvider.token;
-      final restaurants = await RestaurantService.fetchLikeRestaurants(token!);
-      _likedRestaurants.addAll(restaurants);
-    } catch (error) {
-      _likedRestaurants.clear();
-    } finally {
-      _isLoading = false;
+      _startLoading();
+      final token = _authProvider.token;
+      if (token == null) throw Exception("Token utilisateur manquant.");
+
+      final restaurants = await RestaurantService.fetchLikeRestaurants(token);
+      _likedRestaurants = restaurants;
       notifyListeners();
+    } catch (error) {
+      _likedRestaurants = [];
+      _errorMessage = error.toString();
+      notifyListeners();
+    } finally {
+      _stopLoading();
     }
   }
 
   Future<void> initialize(AuthProvider authProvider) async {
     if (!authProvider.isAuthenticated) return;
-    if (authProvider.isManager) {
-      await fetchManagerRestaurants();
-    } else {
-      await fetchRandomRestaurants();
-      await fetchLikedRestaurants();
+
+    try {
+      if (authProvider.isManager) {
+        await fetchManagerRestaurants();
+        _currentRestaurantManager = _restaurants.isNotEmpty ? _restaurants.last : null;
+      } else {
+        await fetchRandomRestaurants();
+        await fetchLikedRestaurants();
+      }
+    } catch (error) {
+      _errorMessage = error.toString();
+      notifyListeners();
+    } finally {
+      _stopLoading();
     }
-    notifyListeners();
   }
 
   Future<void> handleRestaurantSwipe(String action, int restaurantId) async {
+    if (_isLoading) return;
+
     try {
-      String token = _authProvider.token ?? '';
+      _startLoading();
+      final token = _authProvider.token;
+      if (token == null) throw Exception("Token utilisateur manquant.");
+
       await handleSwipeAction(token, action, restaurantId);
 
       final swipedRestaurant = _restaurants.firstWhere(
         (restaurant) => restaurant.id == restaurantId,
+        orElse: () => throw Exception("Restaurant non trouvé"),
       );
 
       _restaurants.remove(swipedRestaurant);
@@ -134,10 +183,16 @@ class RestaurantProvider with ChangeNotifier {
         _authProvider.setCurrentLikeCount(_authProvider.currentLikeCount + 1);
       }
 
+      if (_restaurants.isEmpty) {
+        await fetchRandomRestaurants();
+      }
+
       notifyListeners();
     } catch (error) {
       _errorMessage = error.toString();
       notifyListeners();
+    } finally {
+      _stopLoading();
     }
   }
 
@@ -161,9 +216,9 @@ class RestaurantProvider with ChangeNotifier {
     int averagePrice,
     int averageService,
     String phoneNumber,
-    File thumbnail,
+    dynamic thumbnail,
   ) async {
-    _startFunction();
+    _startLoading();
 
     try {
       final token = _authProvider.token;
@@ -189,15 +244,15 @@ class RestaurantProvider with ChangeNotifier {
         ),
       );
 
-      Navigator.of(context).pop();
+      Navigator.pop(context);
     } catch (e) {
       if (e is ApiException) {
         rethrow;
       } else {
-        throw Exception("Erreur réseau ou autre: $e");
+        throw Exception(e);
       }
     } finally {
-      _isLoading = false;
+      _stopLoading();
       notifyListeners();
     }
   }

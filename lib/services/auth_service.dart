@@ -1,4 +1,5 @@
 import 'package:ceticy/core/app_constants.dart';
+import 'package:ceticy/models/api_exception.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -31,6 +32,14 @@ class AuthService {
       }),
     );
 
+    if (response.statusCode >= 400) {
+      final errorResponse = jsonDecode(response.body);
+      throw ApiException(
+        kind: errorResponse['kind'] ?? 'unknown',
+        content: errorResponse['content'] ?? 'unknown error',
+      );
+    }
+
     return response.body;
   }
 
@@ -44,6 +53,14 @@ class AuthService {
         'scope': scope,
       },
     );
+
+    if (response.statusCode >= 400) {
+      final errorResponse = jsonDecode(response.body);
+      throw ApiException(
+        kind: errorResponse['kind'] ?? 'unknown',
+        content: errorResponse['content'] ?? 'unknown error',
+      );
+    }
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -81,6 +98,29 @@ class AuthService {
     } catch (e) {
       throw Exception(
           'Erreur lors de la récupération des informations du compte: $e');
+    }
+  }
+
+  static Future<bool> accountDelete(String token) async {
+    final response = await http.get(
+      Uri.parse('$apiBaseUrl/auth/delete'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode >= 400) {
+      final errorResponse = jsonDecode(response.body);
+      throw ApiException(
+        kind: errorResponse['kind'] ?? 'unknown',
+        content: errorResponse['content'] ?? 'unknown error',
+      );
+    }
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(response.body);
     }
   }
 }

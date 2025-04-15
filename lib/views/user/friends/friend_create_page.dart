@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:ceticy/core/app_constants.dart';
+import 'package:ceticy/core/widgets/app_bar/app_bar_title.dart';
 import 'package:ceticy/core/widgets/buttons/primary_button.dart';
 import 'package:ceticy/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -82,30 +83,41 @@ class FriendsCreatePageState extends State<FriendsCreatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ajouter un contact'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                controller: emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Ce champ est requis' : null,
-              ),
-              const SizedBox(height: 20),
-              PrimaryButton(
-                onPressed: _submitForm,
-                label: "Ajouter",
-              )
-            ],
-          ),
+        appBar: AppBar(
+          title: AppBarTitle(title: 'Ajouter un ami'),
         ),
-      ),
-    );
+        body: SafeArea(
+            child: SingleChildScrollView(
+                child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                controller: emailController,
+                                decoration:
+                                    const InputDecoration(labelText: 'Email'),
+                                validator: (value) => value!.isEmpty
+                                    ? 'Ce champ est requis'
+                                    : null,
+                              ),
+                              const SizedBox(height: 20),
+                              PrimaryButton(
+                                onPressed: _submitForm,
+                                label: "Ajouter",
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          "Vous pouvez ajouter un ami en entrant son adresse email. Il recevra une demande d'ami.",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    )))));
   }
 }

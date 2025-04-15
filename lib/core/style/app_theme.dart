@@ -5,6 +5,7 @@ class AppTheme {
   AppTheme._();
 
   static final ThemeData lightTheme = ThemeData(
+    indicatorColor: AppColors.primary600,
     scaffoldBackgroundColor: Colors.white,
     brightness: Brightness.light,
     colorScheme: const ColorScheme.light(
@@ -30,9 +31,10 @@ class AppTheme {
         fontWeight: FontWeight.w600,
       ),
     ),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.transparent,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.white, // Status bar IOS
       elevation: 0,
+      scrolledUnderElevation: 0,
       titleTextStyle: TextStyle(
         color: Colors.black,
         fontSize: 20,
@@ -95,7 +97,7 @@ class AppTheme {
     brightness: Brightness.dark,
     colorScheme: const ColorScheme.dark(
       primary: AppColors.primary400,
-      secondary: AppColors.grey400,
+      secondary: Colors.white24,
       surface: AppColors.black,
       error: AppColors.error,
       onPrimary: Colors.black,
@@ -119,6 +121,7 @@ class AppTheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      scrolledUnderElevation: 0,
       titleTextStyle: TextStyle(
         color: Colors.white,
         fontSize: 20,

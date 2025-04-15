@@ -17,6 +17,7 @@ class SecondaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
           foregroundColor: Theme.of(context).colorScheme.secondary,
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
           textStyle: const TextStyle(
@@ -25,11 +26,11 @@ class SecondaryButton extends StatelessWidget {
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
-            side: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 2.0),
+            side: BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2.0),
           ),
           elevation: 0,
         ),
-        child: Text(label),
+        child: Text(label, style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
       ),
     );
   }

@@ -19,15 +19,17 @@ class ChoiceInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return  ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        backgroundColor:  selectedValue == value ? Theme.of(context).colorScheme.surface : Colors.transparent,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(
-            color: Theme.of(context).colorScheme.onSurface,
-            width: selectedValue == value ? 2 : 1,
+            color: selectedValue == value ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.secondary,
+            width: selectedValue == value ? 2 :1,
           ),
         ),
+        elevation: 0
       ),
       onPressed: () => onChanged(value),
       child: Text(label),

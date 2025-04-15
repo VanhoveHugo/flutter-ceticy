@@ -1,4 +1,5 @@
 import 'package:ceticy/core/app_asset.dart';
+import 'package:ceticy/core/widgets/buttons/logout_button.dart';
 import 'package:ceticy/core/widgets/modals/subscription_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -116,29 +117,15 @@ class ProfilePage extends StatelessWidget {
                     textAlign: TextAlign.left,
                   ),
                   const SizedBox(height: 16),
-                  SizedBox(
-                    height: 50,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: SvgPicture.asset(
-                              AppAsset.getSvg("flash_outline"),
-                              width: 50,
-                              height: 50,
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.onSurface,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                        );
-                      },
-                    ),
-                  )
+                  Text(
+                    'Vous n\'avez pas encore de récompenses',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ],
               )),
+          const SizedBox(height: 24),
+          LogoutButton(),
+          const SizedBox(height: 24),
         ],
       ),
     )));

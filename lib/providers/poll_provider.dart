@@ -4,7 +4,7 @@ import 'package:ceticy/models/api_exception.dart';
 import 'package:ceticy/models/poll_model.dart';
 import 'package:ceticy/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:ceticy/services/poll_service.dart'; // Importer le service qui contient les fonctions createPoll et deletePoll
+import 'package:ceticy/services/poll_service.dart';
 
 class PollProvider with ChangeNotifier {
   late final AuthProvider _authProvider;
@@ -29,7 +29,7 @@ class PollProvider with ChangeNotifier {
 
   void _onAuthChanged() {
     if (_authProvider.isAuthenticated) {
-      // Initialiser les données du fournisseur si l'utilisateur est connecté
+     initialize(_authProvider);
     } else {
       _resetProvider();
     }
@@ -42,6 +42,12 @@ class PollProvider with ChangeNotifier {
     if (_authProvider.isAuthenticated) {
       initialize(_authProvider);
     }
+  }
+
+  @override
+  void dispose() {
+    _authProvider.removeListener(_onAuthChanged);
+    super.dispose();
   }
 
   Future<void> initialize(AuthProvider authProvider) async {
@@ -65,18 +71,13 @@ class PollProvider with ChangeNotifier {
       final String res = await PollService.fetchAllPolls(token);
       final List<dynamic> data = jsonDecode(res);
       _polls = data.map((e) => Poll.fromJson(e)).toList();
+      print(_polls);
     } catch (error) {
       _errorMessage = error.toString();
     } finally {
       _isLoading = false;
       notifyListeners();
     }
-  }
-
-  @override
-  void dispose() {
-    _authProvider.removeListener(_onAuthChanged);
-    super.dispose();
   }
 
   Future<void> createPoll(BuildContext context, String name, List friendsArray,
@@ -127,7 +128,7 @@ class PollProvider with ChangeNotifier {
         _errorMessage = "Erreur inconnue lors de la création du sondage.";
       }
     } finally {
-      Navigator.of(context).pop();
+      Navigator.pop(context);
       _isLoading = false;
       notifyListeners();
     }
@@ -142,6 +143,9 @@ class PollProvider with ChangeNotifier {
         throw Exception("Token utilisateur manquant.");
       }
       await PollService.deletePoll(token, pollId);
+
+      _polls.removeWhere((element) => element.id == pollId);
+      notifyListeners();
 
       fetchAllPolls();
 
@@ -162,7 +166,6 @@ class PollProvider with ChangeNotifier {
     } catch (error) {
       _errorMessage = error.toString();
     } finally {
-      Navigator.pop(context);
       _isLoading = false;
       notifyListeners();
     }

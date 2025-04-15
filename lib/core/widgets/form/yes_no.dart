@@ -23,26 +23,45 @@ class YesNoState extends State<YesNo> {
     return Row(
       children: [
         Expanded(
-          child: CheckboxListTile(
-            value: vote == true,
-            onChanged: (value) {
+          child: ListTile(
+            title: const Text("Oui", textAlign: TextAlign.start),
+            contentPadding: const EdgeInsets.symmetric(vertical: 0),
+            leading: Radio<bool>(
+              value: true,
+              groupValue: vote,
+              onChanged: (value) {
+                setState(() {
+                  vote = value;
+                });
+              },
+              activeColor: Theme.of(context).colorScheme.primary,
+            ),
+            onTap: () {
               setState(() {
                 vote = true;
               });
             },
-            title: const Text("Oui"),
-            controlAffinity: ListTileControlAffinity.leading,
           ),
         ),
         Expanded(
-          child: CheckboxListTile(
-            value: vote == false,
-            onChanged: (value) {
+          child: ListTile(
+            title: const Text("Non", textAlign: TextAlign.end),
+            contentPadding: const EdgeInsets.symmetric(vertical: 0),
+            trailing: Radio<bool>(
+              value: false,
+              groupValue: vote,
+              onChanged: (value) {
+                setState(() {
+                  vote = value;
+                });
+              },
+              activeColor: Theme.of(context).colorScheme.primary,
+            ),
+            onTap: () {
               setState(() {
                 vote = false;
               });
             },
-            title: const Text("Non", textAlign: TextAlign.end),
           ),
         ),
       ],
