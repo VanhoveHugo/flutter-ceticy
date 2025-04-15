@@ -48,7 +48,6 @@ class SwipeDescriptionNav extends StatelessWidget {
             ),
           ),
         );
-
       }),
     );
   }

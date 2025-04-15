@@ -109,8 +109,8 @@ class ProfilePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Container(
-                    margin: const EdgeInsets.all(8),
-                    padding: const EdgeInsets.all(8),
+                      margin: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.primary,

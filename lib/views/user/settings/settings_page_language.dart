@@ -20,7 +20,8 @@ class SettingsPageLanguage extends StatelessWidget {
         itemCount: languageProvider.languages.length,
         itemBuilder: (context, index) {
           final language = languageProvider.languages[index];
-          final isSelected = languageProvider.currentLocale.languageCode == language['code'];
+          final isSelected =
+              languageProvider.currentLocale.languageCode == language['code'];
 
           return SettingsListRadio(
             title: language['name'],

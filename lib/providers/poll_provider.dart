@@ -71,7 +71,6 @@ class PollProvider with ChangeNotifier {
       final String res = await PollService.fetchAllPolls(token);
       final List<dynamic> data = jsonDecode(res);
       _polls = data.map((e) => Poll.fromJson(e)).toList();
-      print(_polls);
     } catch (error) {
       _errorMessage = error.toString();
     } finally {

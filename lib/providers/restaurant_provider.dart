@@ -14,6 +14,9 @@ class RestaurantProvider with ChangeNotifier {
   List<Restaurant> _swipedRestaurants = [];
   List<Restaurant> _likedRestaurants = [];
   Restaurant? _currentRestaurantManager;
+  int _loadedRestaurantsCount = 0;
+  bool _showAd = false;
+  bool _isFirstLoad = true;
 
   // Getters
   bool get isLoading => _isLoading;
@@ -22,6 +25,7 @@ class RestaurantProvider with ChangeNotifier {
   List<Restaurant> get swipedRestaurants => List.unmodifiable(_swipedRestaurants);
   List<Restaurant> get likedRestaurants => List.unmodifiable(_likedRestaurants);
   Restaurant? get currentRestaurantManager => _currentRestaurantManager;
+  bool get showAd => _showAd;
 
   // Setters
   void setCurrentRestaurantManager(Restaurant restaurant) {
@@ -98,27 +102,40 @@ class RestaurantProvider with ChangeNotifier {
   }
 
   Future<void> fetchRandomRestaurants() async {
-    if (_isLoading) return;
-
     try {
-      _startLoading();
+      setLoading(true);
       final token = _authProvider.token;
       if (token == null) throw Exception("Token utilisateur manquant.");
 
       final newRestaurants = await RestaurantService.fetchRestaurants(token);
-      if (_restaurants.isEmpty) {
-        _restaurants = newRestaurants;
-      } else {
+
+      if (newRestaurants.isNotEmpty) {
         _restaurants.addAll(newRestaurants);
+        _loadedRestaurantsCount += newRestaurants.length;
+        
+        if (!_isFirstLoad && _loadedRestaurantsCount >= 20) {
+          _showAd = true;
+          _loadedRestaurantsCount = 0;
+        }
+        
+        _isFirstLoad = false;
+        notifyListeners();
       }
-      notifyListeners();
-    } catch (error) {
-      _restaurants = [];
-      _errorMessage = error.toString();
-      notifyListeners();
+    } catch (e) {
+      print('Error fetching random restaurants: $e');
     } finally {
-      _stopLoading();
+      setLoading(false);
     }
+  }
+
+  void setState(List<Restaurant> newRestaurants) {
+    _restaurants = newRestaurants;
+    notifyListeners();
+  }
+
+  void setLoading(bool isLoading) {
+    _isLoading = isLoading;
+    notifyListeners();
   }
 
   Future<void> fetchLikedRestaurants() async {
@@ -160,11 +177,16 @@ class RestaurantProvider with ChangeNotifier {
     }
   }
 
+  bool _shouldReloadRestaurants() {
+    return _restaurants.isEmpty && !_isLoading;
+  }
+
   Future<void> handleRestaurantSwipe(String action, int restaurantId) async {
     if (_isLoading) return;
 
     try {
-      _startLoading();
+      print("action: $action restaurantId: $restaurantId");
+
       final token = _authProvider.token;
       if (token == null) throw Exception("Token utilisateur manquant.");
 
@@ -183,11 +205,12 @@ class RestaurantProvider with ChangeNotifier {
         _authProvider.setCurrentLikeCount(_authProvider.currentLikeCount + 1);
       }
 
-      if (_restaurants.isEmpty) {
+      notifyListeners();
+
+      if (_shouldReloadRestaurants()) {
+        _startLoading();
         await fetchRandomRestaurants();
       }
-
-      notifyListeners();
     } catch (error) {
       _errorMessage = error.toString();
       notifyListeners();
@@ -255,5 +278,10 @@ class RestaurantProvider with ChangeNotifier {
       _stopLoading();
       notifyListeners();
     }
+  }
+
+  void hideAd() {
+    _showAd = false;
+    notifyListeners();
   }
 }

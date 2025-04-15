@@ -13,10 +13,10 @@ class SwipeDescriptionReviews extends StatelessWidget {
         InfoDev(),
         // Display number of reviews
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Row(
-            children: [
-              Text(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Row(
+              children: [
+                Text(
                   "5 Avis",
                   style: TextStyle(
                     fontSize: 16,
@@ -41,9 +41,8 @@ class SwipeDescriptionReviews extends StatelessWidget {
                   size: 20,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
-            ],
-          )
-        ),
+              ],
+            )),
         Review(),
         Review(),
         Review(),

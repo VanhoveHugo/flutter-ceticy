@@ -8,10 +8,12 @@ class SettingsPageUpdatePassword extends StatefulWidget {
   const SettingsPageUpdatePassword({super.key});
 
   @override
-  SettingsPageUpdatePasswordState createState() => SettingsPageUpdatePasswordState();
+  SettingsPageUpdatePasswordState createState() =>
+      SettingsPageUpdatePasswordState();
 }
 
-class SettingsPageUpdatePasswordState extends State<SettingsPageUpdatePassword> {
+class SettingsPageUpdatePasswordState
+    extends State<SettingsPageUpdatePassword> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;

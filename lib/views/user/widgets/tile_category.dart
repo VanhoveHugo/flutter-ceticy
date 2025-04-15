@@ -6,15 +6,13 @@ class TileCategory extends StatelessWidget {
   final String? subtitle;
   final VoidCallback onTap;
 
-
   const TileCategory({
-         super.key,
+    super.key,
     required this.icon,
     required this.title,
     this.subtitle,
     required this.onTap,
   });
-
 
   @override
   Widget build(BuildContext context) {

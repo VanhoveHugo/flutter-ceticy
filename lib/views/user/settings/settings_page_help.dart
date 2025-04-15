@@ -28,8 +28,7 @@ class SettingsPageHelp extends StatelessWidget {
                     InfoDev(),
                     SettingsListTile(
                         name: localizations.reportProblem, function: () {}),
-                    SettingsListTile(
-                        name: localizations.faq, function: () {}),
+                    SettingsListTile(name: localizations.faq, function: () {}),
                     const SizedBox(height: 16),
                     SettingsListTile(
                         name: localizations.aboutApp, function: () {}),

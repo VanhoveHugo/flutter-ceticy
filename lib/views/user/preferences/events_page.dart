@@ -63,4 +63,4 @@ class _EventsItem extends StatelessWidget {
       },
     );
   }
-} 
+}

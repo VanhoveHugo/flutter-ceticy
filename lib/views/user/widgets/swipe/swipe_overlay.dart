@@ -55,10 +55,9 @@ class SwipeOverlay extends StatelessWidget {
                       Text(
                         "3,5",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700
-                        ),
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700),
                       ),
                       const SizedBox(width: 4),
                       Icon(Icons.star,

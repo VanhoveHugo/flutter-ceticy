@@ -14,7 +14,8 @@ class SwipeDescriptionAbout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var hasDescription = restaurant.description.isNotEmpty;
-    var hasContactInfo = restaurant.address != null || restaurant.phoneNumber != null;
+    var hasContactInfo =
+        restaurant.address != null || restaurant.phoneNumber != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

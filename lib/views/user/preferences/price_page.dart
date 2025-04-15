@@ -56,11 +56,12 @@ class _PriceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingsListCheckbox(
-      title: '${price.name} (${price.minPrice == 0 ? '-${price.maxPrice}' : price.maxPrice == 0 ? '+${price.minPrice}' : '${price.minPrice}-${price.maxPrice}'}€)',
+      title:
+          '${price.name} (${price.minPrice == 0 ? '-${price.maxPrice}' : price.maxPrice == 0 ? '+${price.minPrice}' : '${price.minPrice}-${price.maxPrice}'}€)',
       value: price.isSelected,
       onChanged: (value) {
         onToggle();
       },
     );
   }
-} 
+}

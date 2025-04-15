@@ -321,8 +321,7 @@ class FavoritesPageSatet extends State<FavoritesPage> {
                               : Container(),
                         ],
                       ),
-                      onTap: () {
-                      },
+                      onTap: () {},
                     );
                   },
                 ),

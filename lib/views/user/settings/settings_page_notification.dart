@@ -33,11 +33,16 @@ class SettingsPageNotification extends StatelessWidget {
                       onChanged: (value) {},
                     ),
                     const SizedBox(height: 32),
-                    SettingsListTile(name: localizations.friends, function: () {}),
-                    SettingsListTile(name: localizations.polls, function: () {}),
-                    SettingsListTile(name: localizations.interests, function: () {}),
-                    SettingsListTile(name: localizations.stories, function: () {}),
-                    SettingsListTile(name: localizations.reviews, function: () {}),
+                    SettingsListTile(
+                        name: localizations.friends, function: () {}),
+                    SettingsListTile(
+                        name: localizations.polls, function: () {}),
+                    SettingsListTile(
+                        name: localizations.interests, function: () {}),
+                    SettingsListTile(
+                        name: localizations.stories, function: () {}),
+                    SettingsListTile(
+                        name: localizations.reviews, function: () {}),
                   ],
                 ),
               ),

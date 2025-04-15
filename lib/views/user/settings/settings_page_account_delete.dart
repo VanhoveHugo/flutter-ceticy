@@ -31,16 +31,14 @@ class _SettingsPageAccountDeleteState extends State<SettingsPageAccountDelete> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                  localizations.deleteAccountWarning,
+              Text(localizations.deleteAccountWarning,
                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
               const SizedBox(height: 4),
               Text(localizations.deleteAccountWarning1),
               Text(localizations.deleteAccountWarning2),
               Text(localizations.deleteAccountWarning3),
               const SizedBox(height: 16),
-              Text(
-                  localizations.deleteAccountWarning2,
+              Text(localizations.deleteAccountWarning2,
                   style: TextStyle(fontWeight: FontWeight.w600)),
               SettingsListToggle(
                 title: localizations.iUnderstand,
@@ -59,7 +57,8 @@ class _SettingsPageAccountDeleteState extends State<SettingsPageAccountDelete> {
                       AuthProvider authProvider =
                           Provider.of<AuthProvider>(context, listen: false);
                       authProvider.accountDelete();
-                      Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, "/login", (route) => false);
                     }
                   }),
             ],

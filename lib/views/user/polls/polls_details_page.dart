@@ -25,8 +25,7 @@ class PollsDetailsPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(poll.name),
           actions: [
-            if (authProvider.userId == poll.creatorId)
-              _popupMenu(context)
+            if (authProvider.userId == poll.creatorId) _popupMenu(context)
           ],
         ),
         body: const Center(
@@ -43,8 +42,7 @@ class PollsDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(poll.name),
         actions: [
-          if (authProvider.userId == poll.creatorId)
-            _popupMenu(context)
+          if (authProvider.userId == poll.creatorId) _popupMenu(context)
         ],
       ),
       body: Padding(
@@ -139,49 +137,46 @@ class PollsDetailsPage extends StatelessWidget {
   // Popup menu
   Widget _popupMenu(BuildContext context) {
     return PopupMenuButton<int>(
-              icon: const Icon(Icons.more_vert),
-              offset: const Offset(0, 50),
-              onSelected: (value) {},
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 1,
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete,
-                          color: Theme.of(context).colorScheme.error),
-                      const SizedBox(width: 8),
-                      Text("Supprimer"),
-                    ],
+      icon: const Icon(Icons.more_vert),
+      offset: const Offset(0, 50),
+      onSelected: (value) {},
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: 1,
+          child: Row(
+            children: [
+              Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
+              const SizedBox(width: 8),
+              Text("Supprimer"),
+            ],
+          ),
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text("Supprimer le sondage"),
+                content: Text("Êtes-vous sûr de vouloir continuer ?"),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("Annuler"),
                   ),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text("Supprimer le sondage"),
-                        content:
-                            Text("Êtes-vous sûr de vouloir continuer ?"),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text("Annuler"),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              PollProvider pollProvider =
-                                  Provider.of<PollProvider>(context,
-                                      listen: false);
-                              pollProvider.deletePoll(context, poll.id);
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context, "/home", (route) => false);
-                            },
-                            child: Text("Supprimer",
-                                style: TextStyle(color: Colors.red)),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                  TextButton(
+                    onPressed: () {
+                      PollProvider pollProvider =
+                          Provider.of<PollProvider>(context, listen: false);
+                      pollProvider.deletePoll(context, poll.id);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, "/home", (route) => false);
+                    },
+                    child:
+                        Text("Supprimer", style: TextStyle(color: Colors.red)),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ],
     );
   }

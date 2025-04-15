@@ -4,11 +4,7 @@ class ProfilButton extends StatelessWidget {
   final String text;
   final Function() onPressed;
 
-  const ProfilButton({
-    super.key,
-    required this.text,
-    required this.onPressed
-  });
+  const ProfilButton({super.key, required this.text, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

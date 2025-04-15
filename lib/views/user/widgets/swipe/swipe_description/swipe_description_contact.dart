@@ -13,9 +13,9 @@ class SwipeDescriptionContact extends StatelessWidget {
     String? address = restaurant.address;
     String? phone = restaurant.phoneNumber;
 
-  //   if (address!.endsWith("France")) {
-  //     address = address.substring(0, address.length - 7);
-  //   }
+    //   if (address!.endsWith("France")) {
+    //     address = address.substring(0, address.length - 7);
+    //   }
 
     Future<void> openMaps() async {
       String encodedAddress = Uri.encodeComponent(address!);
@@ -164,46 +164,47 @@ class SwipeDescriptionContact extends StatelessWidget {
                         ),
                       )
                     : Container(),
-                    address != null
-                    ?
-                GestureDetector(
-                  onTap: () => showConfirmationDialog(context),
-                  child: Chip(
-                    label: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.location_on,
-                          size: 14,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                        const SizedBox(width: 6),
-                        Flexible(
-                          // 🔥 Permet au texte de s'adapter sans déborder
-                          child: Text(
-                            address,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 12,
-                            ),
-                            softWrap: true, // 🔥 Permet le passage à la ligne
+                address != null
+                    ? GestureDetector(
+                        onTap: () => showConfirmationDialog(context),
+                        child: Chip(
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                size: 14,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                              const SizedBox(width: 6),
+                              Flexible(
+                                // 🔥 Permet au texte de s'adapter sans déborder
+                                child: Text(
+                                  address,
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12,
+                                  ),
+                                  softWrap:
+                                      true, // 🔥 Permet le passage à la ligne
+                                ),
+                              ),
+                            ],
                           ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                width: 1),
+                          ),
+                          backgroundColor:
+                              Theme.of(context).scaffoldBackgroundColor,
+                          padding: const EdgeInsets.all(0),
                         ),
-                      ],
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      side: BorderSide(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          width: 1),
-                    ),
-                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    padding: const EdgeInsets.all(0),
-                  ),
-                )
+                      )
                     : Container(),
-
               ],
             ),
           ],

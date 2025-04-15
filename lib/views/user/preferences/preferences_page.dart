@@ -12,7 +12,8 @@ class PreferencesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final preferencesProvider = Provider.of<PreferencesProvider>(context);
-    final selectedCuisineCount = preferencesProvider.selectedCuisineTypes.length;
+    final selectedCuisineCount =
+        preferencesProvider.selectedCuisineTypes.length;
     final selectedAmbianceCount = preferencesProvider.selectedAmbiances.length;
     final selectedThemeCount = preferencesProvider.selectedThemes.length;
     final selectedPriceCount = preferencesProvider.selectedPrices.length;

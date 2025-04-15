@@ -23,7 +23,6 @@ class SwipeDescriptionSmartInfos extends StatelessWidget {
     return "1 km";
   }
 
-
   @override
   Widget build(BuildContext context) {
     String service = getAverageService();

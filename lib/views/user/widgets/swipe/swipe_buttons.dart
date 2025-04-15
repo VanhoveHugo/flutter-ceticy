@@ -29,7 +29,8 @@ class SwipeButtons extends StatelessWidget {
     }
 
     final bool isDescriptionVisible = swipeProvider.isDescriptionVisible;
-    final bottomPosition = isDescriptionVisible ? _descriptionBottomPosition : _bottomPosition;
+    final bottomPosition =
+        isDescriptionVisible ? _descriptionBottomPosition : _bottomPosition;
 
     return Positioned(
       bottom: bottomPosition,
@@ -66,7 +67,8 @@ class SwipeButtons extends StatelessWidget {
     );
   }
 
-  Widget _buildDislikeButton(BuildContext context, SwipeProvider swipeProvider, Function(String) handleSwipeAction) {
+  Widget _buildDislikeButton(BuildContext context, SwipeProvider swipeProvider,
+      Function(String) handleSwipeAction) {
     if (swipeProvider.swipeAction == "like") return const SizedBox();
 
     return Material(
@@ -91,7 +93,8 @@ class SwipeButtons extends StatelessWidget {
   }
 
   Widget _buildInfoButton(BuildContext context, SwipeProvider swipeProvider) {
-    if (swipeProvider.swipeAction == "like" || swipeProvider.swipeAction == "dislike") {
+    if (swipeProvider.swipeAction == "like" ||
+        swipeProvider.swipeAction == "dislike") {
       return const SizedBox();
     }
 
@@ -123,7 +126,8 @@ class SwipeButtons extends StatelessWidget {
     );
   }
 
-  Widget _buildLikeButton(BuildContext context, SwipeProvider swipeProvider, Function(String) handleSwipeAction) {
+  Widget _buildLikeButton(BuildContext context, SwipeProvider swipeProvider,
+      Function(String) handleSwipeAction) {
     if (swipeProvider.swipeAction == "dislike") return const SizedBox();
 
     final colorScheme = Theme.of(context).colorScheme;

@@ -11,8 +11,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -57,11 +56,12 @@ class SettingsPage extends StatelessWidget {
                       const SizedBox(height: 16),
                       !authProvider.isManager
                           ? SettingsListTile(
-                          name: localizations.addFriend,
-                          function: () {
-                            Navigator.pushNamed(context, "/friends/create");
-                          },
-                          icon: Icons.person_add): const SizedBox(),
+                              name: localizations.addFriend,
+                              function: () {
+                                Navigator.pushNamed(context, "/friends/create");
+                              },
+                              icon: Icons.person_add)
+                          : const SizedBox(),
                       SettingsListTile(
                           name: localizations.updatePassword,
                           function: () {

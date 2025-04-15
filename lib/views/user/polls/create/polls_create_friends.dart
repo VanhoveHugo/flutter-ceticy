@@ -66,10 +66,8 @@ class CreatePollFriendsState extends State<CreatePollFriends> {
             trailing: isSelected
                 ? const Icon(Icons.check_box)
                 : const Icon(Icons.check_box_outline_blank),
-            tileColor: isSelected
-                ? Theme.of(context).colorScheme.surface
-                : null,
-
+            tileColor:
+                isSelected ? Theme.of(context).colorScheme.surface : null,
             onTap: () {
               setState(() {
                 if (isSelected) {
@@ -77,7 +75,8 @@ class CreatePollFriendsState extends State<CreatePollFriends> {
                 } else {
                   friendsArray.add(friend.id);
                 }
-                submitIsEmpty = pollProvider.friends.isNotEmpty && friendsArray.isEmpty;
+                submitIsEmpty =
+                    pollProvider.friends.isNotEmpty && friendsArray.isEmpty;
               });
               widget.onFriendsUpdated(friendsArray);
             },

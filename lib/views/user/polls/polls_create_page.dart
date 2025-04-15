@@ -111,7 +111,7 @@ class CreatePollPageState extends State<CreatePollPage> {
                           if (!_formKey.currentState!.validate()) {
                             return;
                           }
-                          
+
                           if (_currentStep == 2 && selectedRestaurant == null) {
                             return setState(() {
                               selectedFriendsIsEmpty = true;
